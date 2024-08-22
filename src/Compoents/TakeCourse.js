@@ -29,7 +29,7 @@ const BackgroundImage = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 50%; /* 50% of viewport height */
+  height: 100%; /* Full viewport height */
   background-image: url(${bg3});
   background-size: cover;
   background-position: center;
@@ -37,10 +37,7 @@ const BackgroundImage = styled.div`
 `;
 
 const Content = styled.div`
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Center the content vertically and horizontally */
+  position: relative; /* Changed from absolute to relative */
   text-align: center;
   color: #fff;
   z-index: 1;

@@ -4,6 +4,9 @@ import Home from '../Compoents/Home'
 import Box from '../Compoents/Box'
 import Offer from '../Compoents/Offer'
 import TakeCourse from '../Compoents/TakeCourse'
+import Certified from '../Compoents/Certified'
+import Courses from '../Compoents/Courses'
+import Experience from '../Compoents/Experience'
 
 const Main = () => {
   return (
@@ -13,6 +16,9 @@ const Main = () => {
  <Box/>
  <Offer/>
  <TakeCourse/>
+ <Certified/>
+ <Courses/>
+ <Experience/>
  </>
   )
 }
