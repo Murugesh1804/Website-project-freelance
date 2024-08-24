@@ -25,7 +25,9 @@ const Home = () => {
   return (
     <Container>
       <BackgroundImage src={currentImage} alt="Background" />
-      <CenteredText>{currentText}</CenteredText>
+      <CenteredText>{currentText}<br></br>
+        <Button className='read'>Read more</Button>
+      </CenteredText>
     </Container>
   );
 };
@@ -40,6 +42,24 @@ const Container = styled.div`
   overflow: hidden;
 `;
 
+const Button = styled.button`
+  padding: 15px 25px;
+  font-size: 1rem;
+  font-family:poppins;
+  color: #fff;
+  background-color: #FDA537;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #FDA538;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
 const BackgroundImage = styled.img`
   position: absolute;
   top: 0;

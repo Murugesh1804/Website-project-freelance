@@ -49,6 +49,7 @@ const Container = styled.div`
   align-items: center;
   padding: 20px;
   background-color: transparent; /* Set background to transparent */
+  margin-top:40px;
 `;
 
 const Title = styled.h1`

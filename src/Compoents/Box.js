@@ -5,19 +5,19 @@ import { GiTeacher } from "react-icons/gi";
 const Box = () => {
   return (
     <Container>
-      <BoxItem color="#e0f7fa"> {/* Light Cyan */}
+      <BoxItem color="#1EAAF1"> {/* Light Cyan */}
         <Icon><GiTeacher /></Icon>
         <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi fuga eum maxime numquam laborum nisi, reprehenderit amet architecto optio? Nemo.</Text>
       </BoxItem>
-      <BoxItem color="#fce4ec"> {/* Light Pink */}
+      <BoxItem color="#8CC152"> {/* Light Pink */}
         <Icon><GiTeacher /></Icon>
         <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi fuga eum maxime numquam laborum nisi, reprehenderit amet architecto optio? Nemo.</Text>
       </BoxItem>
-      <BoxItem color="#fffde7"> {/* Light Yellow */}
+      <BoxItem color="#5D50C6"> {/* Light Yellow */}
         <Icon><GiTeacher /></Icon>
         <Text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat itaque cum possimus nihil totam dolor! Odit architecto molestiae officia sapiente?</Text>
       </BoxItem>
-      <BoxItem color="#e8f5e9"> {/* Light Green */}
+      <BoxItem color="#F1453D"> {/* Light Green */}
         <Icon><GiTeacher /></Icon>
         <Text>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Magni dolorum, sequi totam repudiandae ducimus accusantium. Nesciunt reprehenderit magnam ad provident?</Text>
       </BoxItem>
@@ -30,6 +30,8 @@ const Container = styled.div`
   flex-wrap: nowrap; /* Prevent wrapping */
   gap: 0; /* Remove gaps between boxes */
   width: 100%; /* Full width of the parent */
+
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
@@ -39,7 +41,6 @@ const Container = styled.div`
 
 const BoxItem = styled.div`
   background-color: ${props => props.color || '#f9f9f9'};
-  border-radius: 8px;
   padding: 20px;
   width: 25%; /* Adjust width to fit boxes in a single line */
   text-align: center;
@@ -47,6 +48,12 @@ const BoxItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor:pointer;
+
+  
+  &:hover {
+    width:28%;
+  }
 
   @media (max-width: 768px) {
     width: 90%; /* Full width on small screens */
@@ -54,18 +61,18 @@ const BoxItem = styled.div`
 `;
 
 const Icon = styled.div`
-  color: white;
+  color: black;
 
-  background-color: black;
-  width: 100px;
-  height: 100px;
+  background-color: white;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  font-size: 2rem;
+  font-size: 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
-  margin-top: -55px;
+  margin-top: -90px;
  
 `;
 

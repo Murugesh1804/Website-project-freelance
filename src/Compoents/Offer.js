@@ -6,7 +6,7 @@ const Offer = () => {
   return (
     <Container>
       <LeftSection>
-        <h2>What We Offer</h2>
+        <h1>What We Offer</h1>
         <p>Explore our wide range of educational resources and activities designed to foster a love for learning in children.</p>
         <GridContainer>
           <Column>
@@ -59,7 +59,7 @@ const Offer = () => {
             <p>
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non rerum quas fugit quam aliquid nobis debitis repellat quibusdam fuga amet! Illum vitae dolorem accusamus atque reiciendis eum, error inventore molestias?
             </p>
-      
+      <Button>Read more</Button>
       </RightSection>
     </Container>
   );
@@ -68,8 +68,8 @@ const Offer = () => {
 const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  padding: 30px;
+  gap: 25px;
+  padding: 100px;
   width: 100%;
   box-sizing: border-box;
 
@@ -78,7 +78,25 @@ const Container = styled.div`
     text-align: center;
   }
 `;
+const Button = styled.button`
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-family:poppins;
+  color: #fff;
+  background-color: #FDA537;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-top:15px;
 
+  &:hover {
+    background-color: #FDA538;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
 const LeftSection = styled.div`
   padding: 20px;
   border-radius: 8px;
@@ -92,7 +110,7 @@ const LeftSection = styled.div`
 
   p {
     margin: 0;
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   @media (max-width: 768px) {
@@ -128,12 +146,11 @@ const IconItem = styled.div`
   }
 `;
 const Icon = styled.div`
-  font-size: 36px;
+  font-size: 30px;
   background-color: blue;
   border-radius: 50%;
   padding: 10px;
-  width: 70px;
-  height: 60px;
+  width: 100px;
   color: #fff;
   display: flex;
   justify-content: center;
@@ -152,6 +169,8 @@ const TextWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-family:poppins;
+  font-size : 0.2rem;
 
   @media (max-width: 768px) {
     align-items: center;
@@ -160,7 +179,7 @@ const TextWrapper = styled.div`
 
 const IconText = styled.p`
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.8;
   color: #555;
   text-align: justify;
 

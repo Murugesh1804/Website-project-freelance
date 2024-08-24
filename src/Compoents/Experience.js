@@ -41,6 +41,7 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  margin-top:60px;
 `;
 
 const ImageSection = styled.div`
@@ -65,7 +66,7 @@ const Image = styled.img`
 
 const TextOverlay = styled.div`
   position: absolute;
-  top: 20%;
+  top: 35%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
