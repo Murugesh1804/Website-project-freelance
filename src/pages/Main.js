@@ -9,6 +9,11 @@ import Courses from '../Compoents/Courses'
 import Experience from '../Compoents/Experience'
 import Footer from '../Compoents/Footer'
 import Pricing from '../Compoents/Pricing'
+import SignUp from '../Compoents/SignUp'
+import Login from '../Compoents/Login'
+import Dashboard from '../Compoents/Dashboard'
+
+
 
 const Main = () => {
   return (
@@ -23,6 +28,9 @@ const Main = () => {
  <Experience/>
  <Pricing/>
  <Footer/>
+ {/* <SignUp/>
+ <Login/>
+ <Dashboard/> */}
  </>
   )
 }
