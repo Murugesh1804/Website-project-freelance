@@ -7,7 +7,7 @@ import course4 from '../Assest/course-4.jpg';
 
 const Courses = () => {
   return (
-    <Container>
+    <Container id='courses'>
       <Title><span>Our</span> Courses</Title>
       <CoursesGrid>
         <CourseCard>

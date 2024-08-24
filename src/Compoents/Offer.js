@@ -4,7 +4,7 @@ import { FaBook, FaApple, FaChalkboardTeacher, FaPencilAlt, FaGlobe, FaStar } fr
 
 const Offer = () => {
   return (
-    <Container>
+    <Container id='about'>
       <LeftSection>
         <h1>What We Offer</h1>
         <p>Explore our wide range of educational resources and activities designed to foster a love for learning in children.</p>

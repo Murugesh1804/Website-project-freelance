@@ -42,18 +42,13 @@ const Container = styled.div`
 const BoxItem = styled.div`
   background-color: ${props => props.color || '#f9f9f9'};
   padding: 20px;
-  width: 25%; /* Adjust width to fit boxes in a single line */
+  width: 30%; /* Adjust width to fit boxes in a single line */
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor:pointer;
-
-  
-  &:hover {
-    width:28%;
-  }
 
   @media (max-width: 768px) {
     width: 90%; /* Full width on small screens */
@@ -67,12 +62,12 @@ const Icon = styled.div`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  font-size: 4rem;
+  font-size: 3.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
-  margin-top: -90px;
+  margin-top: -70px;
  
 `;
 

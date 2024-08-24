@@ -50,9 +50,10 @@ const Nav = ({ isLoggedIn }) => {
     const targetId = e.currentTarget.getAttribute('href').substring(1);
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
-      targetElement.scrollIntoView({
+      const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 1; // Adjust the offset as needed
+      window.scrollTo({
+        top: offsetTop,
         behavior: 'smooth',
-        block: 'start',
       });
       setIsOpen(false); 
     }

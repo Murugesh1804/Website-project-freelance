@@ -7,7 +7,7 @@ import teacher4 from '../Assest/teacher4.jpg';
 
 const Certified = () => {
   return (
-    <Container>
+    <Container id='teacher'>
       <Title><span className="first">Certified</span> Teachers</Title>
       <TeacherGrid>
         <TeacherCard>
@@ -54,6 +54,7 @@ const Container = styled.div`
 
 const Title = styled.h1`
   font-size: 2.5rem;
+  margin-top: 50px;
   margin-bottom: 20px;
   text-align: center;
   color: orange;

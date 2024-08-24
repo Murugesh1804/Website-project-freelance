@@ -23,7 +23,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Container>
+    <Container id='home'>
       <BackgroundImage src={currentImage} alt="Background" />
       <CenteredText>{currentText}<br></br>
         <Button className='read'>Read more</Button>

@@ -4,18 +4,18 @@ import teacher1 from '../Assest/teacher1.jpg';
 import teacher2 from '../Assest/teacher2.jpg';
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 
-// Styled component for the Footer container
 const FooterContainer = styled.footer`
   background-color: #000;
   color: #fff;
   padding: 40px 20px;
-  text-align: center;
   width: 100%;
   box-sizing: border-box;
-  height: 70vh;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
 `;
 
-// Styled component for the footer content grid
 const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -32,19 +32,22 @@ const FooterGrid = styled.div`
   }
 `;
 
-// Styled component for each card
 const Card = styled.div`
   background-color: #111;
   padding: 20px;
   border-radius: 8px;
   text-align: left;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
 
   @media (max-width: 768px) {
     padding: 15px;
   }
 `;
 
-// Styled component for icons and contact info
 const ContactInfo = styled.div`
   display: flex;
   align-items: center;
@@ -66,7 +69,6 @@ const ContactInfo = styled.div`
   }
 `;
 
-// Styled component for blog item
 const BlogItem = styled.div`
   display: flex;
   align-items: flex-start;
@@ -108,7 +110,6 @@ const BlogItem = styled.div`
   }
 `;
 
-// Styled component for social media icons
 const SocialMediaIcons = styled.div`
   display: flex;
   gap: 15px;
@@ -133,12 +134,10 @@ const SocialMediaIcons = styled.div`
   }
 `;
 
-// Footer component
 const Footer = () => {
   return (
     <FooterContainer>
       <FooterGrid>
-        {/* Question Card */}
         <Card>
           <h3>Have a Question?</h3>
           <ContactInfo>
@@ -155,7 +154,6 @@ const Footer = () => {
           </ContactInfo>
         </Card>
 
-        {/* Recent Blog Card */}
         <Card>
           <h3>Recent Blog</h3>
           <BlogItem>
@@ -174,7 +172,6 @@ const Footer = () => {
           </BlogItem>
         </Card>
 
-        {/* Links Card */}
         <Card>
           <h3>Quick Links</h3>
           <ul style={{ padding: '0', listStyle: 'none' }}>
@@ -185,7 +182,6 @@ const Footer = () => {
           </ul>
         </Card>
 
-        {/* Subscribe Us Card */}
         <Card>
           <h3>Subscribe Us</h3>
           <p>Get the latest updates and offers.</p>
@@ -226,8 +222,7 @@ const Footer = () => {
         </Card>
       </FooterGrid>
 
-      {/* Copyright Section */}
-      <p style={{ marginTop: '20px', fontSize: '12px', color: '#777' }}>© 2024 Kiddos. All rights reserved.</p>
+      <p style={{ marginTop: '40px', fontSize: '12px', color: '#777' }}>© 2024 Kiddos. All rights reserved.</p>
     </FooterContainer>
   );
 };
