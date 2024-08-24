@@ -53,16 +53,17 @@ const Text = styled.h1`
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 1.2rem;
+  padding: 15px 25px;
+  font-size: 1rem;
+  font-family:poppins;
   color: #fff;
-  background-color: #007bff;
+  background-color: #FDA537;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #FDA538;
   }
 
   @media (max-width: 768px) {

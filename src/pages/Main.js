@@ -7,6 +7,8 @@ import TakeCourse from '../Compoents/TakeCourse'
 import Certified from '../Compoents/Certified'
 import Courses from '../Compoents/Courses'
 import Experience from '../Compoents/Experience'
+import Footer from '../Compoents/Footer'
+import Pricing from '../Compoents/Pricing'
 
 const Main = () => {
   return (
@@ -19,6 +21,8 @@ const Main = () => {
  <Certified/>
  <Courses/>
  <Experience/>
+ <Pricing/>
+ <Footer/>
  </>
   )
 }

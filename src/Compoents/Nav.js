@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import "@fontsource/poppins";
 
 const Nav = ({ isLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,7 +71,6 @@ const Nav = ({ isLoggedIn }) => {
             <NavLink href="#teacher" onClick={handleLinkClick}>Teacher</NavLink>
             <NavLink href="#courses" onClick={handleLinkClick}>Courses</NavLink>
             <NavLink href="#pricing" onClick={handleLinkClick}>Pricing</NavLink>
-            <NavLink href="#blog" onClick={handleLinkClick}>Blog</NavLink>
             {!isLoggedIn && <NavLink href="#login" onClick={handleLinkClick}>Login</NavLink>}
           </NavLinks>
         </NavSection>
@@ -97,7 +97,6 @@ const Nav = ({ isLoggedIn }) => {
           <SidebarLink href="#teacher" onClick={handleLinkClick}>Teacher</SidebarLink>
           <SidebarLink href="#courses" onClick={handleLinkClick}>Courses</SidebarLink>
           <SidebarLink href="#pricing" onClick={handleLinkClick}>Pricing</SidebarLink>
-          <SidebarLink href="#blog" onClick={handleLinkClick}>Blog</SidebarLink>
           {!isLoggedIn && <SidebarLink href="#login" onClick={handleLinkClick}>Login</SidebarLink>}
         </SidebarContent>
       </Sidebar>
@@ -107,7 +106,7 @@ const Nav = ({ isLoggedIn }) => {
 
 const Container = styled.div`
   width: 100vw;
-  height: 60px;
+  height: 70px;
   background-color: white;
   display: flex;
   justify-content: space-between;
@@ -132,17 +131,17 @@ const NavSection = styled.nav`
   flex: 1;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 30px;
 `;
 
 const Logo = styled.h1`
   color: black;
   margin: 0;
+  margin-left:20px;
 
   h2 {
-    font-family: "Wallpoet", sans-serif;
+    font-family: poppins;
     font-weight: 400;
-    letter-spacing: 0.5rem;
   }
 
   @media screen and (max-width: 768px) {
@@ -158,6 +157,7 @@ const NavLinks = styled.div`
   display: flex;
   gap: 20px;
   margin-left: auto;
+  margin-right:40px;
 
   @media screen and (max-width: 768px) {
     display: none;
@@ -168,9 +168,10 @@ const NavLink = styled.a`
   color: black;
   text-decoration: none;
   font-size: 1rem;
+  font-family: poppins;
 
   &:hover {
-    text-decoration: underline;
+    color: #1EAAF1;
   }
 `;
 
