@@ -26,7 +26,7 @@ const Experience = () => {
           </CountCard>
           <CountCard>
             <CountNumber>200+</CountNumber>
-            <CountTitle>Courses Completed</CountTitle>
+            <CountTitle>Coursess Completed</CountTitle>
           </CountCard>
         </CountOverlay>
       </ImageSection>
@@ -84,7 +84,7 @@ const TextOverlay = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-size: 4vw; /* Responsive font size */
+  font-size: 4vw; 
   margin-bottom: 10px;
   color: black;
   span {
@@ -92,15 +92,15 @@ const Heading = styled.h1`
   }
 
   @media (max-width: 1200px) {
-    font-size: 3vw; /* Adjust for medium screens */
+    font-size: 3vw; 
   }
 
   @media (max-width: 768px) {
-    font-size: 5vw; /* Larger font size on smaller screens */
+    font-size: 5vw; 
   }
 
   @media (max-width: 480px) {
-    font-size: 6vw; /* Largest font size on very small screens */
+    font-size: 6vw; 
   }
 `;
 
