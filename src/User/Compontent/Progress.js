@@ -6,7 +6,6 @@ import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Toolti
 ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 const Progress = () => {
-  // Sample data for the bar chart
   const data = {
     labels: ['Stage 1', 'Stage 2', 'Stage 3'],
     datasets: [
@@ -67,12 +66,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background-color: #f8f8f8;
+  background-color: white;
   min-height: 400px;
+  margin-top:20px;
+  margin-bottom:30px;
 `;
 
 const PageTitle = styled.h1`
   font-size: 2rem;
+  font-family:poppins;
   color: #333;
   text-align: center;
   margin-bottom: 20px;
@@ -98,6 +100,8 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  padding-right: 60px;
+  padding-left: 60px;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -158,6 +162,9 @@ const RightColumn = styled.div`
 
   @media (max-width: 768px) {
     min-height: auto;
+  }
+      @media (max-width: 480px) {
+    min-height: 200px;
   }
 `;
 

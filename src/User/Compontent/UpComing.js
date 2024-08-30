@@ -31,7 +31,12 @@ const Container = styled.div`
   justify-content: center; /* Center the content horizontally */
   padding: 20px;
   background-color: #FEE3C1;
-  height: 80vh; /* Set height to 80vh */
+  height: 50vh; /* Set height to 80vh */
+  border-radius:30px;
+
+  @media (max-width: 768px) {
+  height: 50vh;
+  }
 `;
 
 const Box = styled.div`
