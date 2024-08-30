@@ -4,7 +4,7 @@ import locked from '../../Assest/frame.png';
 
 const UpComing = () => {
   return (
-    <Container>
+    <Container id='upcoming'>
       <Box>
         <LeftSide>
           <Title>Upcoming Levels</Title>

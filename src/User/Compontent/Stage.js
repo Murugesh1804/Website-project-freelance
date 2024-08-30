@@ -7,7 +7,7 @@ import upBoxImage from '../../Assest/bg1.jpg'; // Image for UpBox
 
 const Stage = () => {
   return (
-    <Container>
+    <Container id='stage'>
       <Box>
         <UpBox>
           <UpBoxImage src={upBoxImage} alt="Up Box" />

@@ -19,7 +19,7 @@ const Home = () => {
   };
 
   return (
-    <Container>
+    <Container id='home'>
       <WelcomeSection>
         <ProfileImage src={user} alt="userprofile" />
         <Content>
@@ -51,7 +51,7 @@ const Home = () => {
       </ButtonSection>
 
       <ContentSection>{renderContent()}</ContentSection>
-    </Container>
+    </Container >
   );
 };
 
@@ -59,7 +59,7 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  margin-top: 15px;
 `;
 
 const WelcomeSection = styled.div`

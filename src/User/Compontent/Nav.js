@@ -69,9 +69,9 @@ const Nav = ({ isLoggedIn }) => {
           </Logo>
           <NavLinks>
             <NavLink href="#home" onClick={handleLinkClick}>Home</NavLink>
-            <NavLink href="#about" onClick={handleLinkClick}>Progress</NavLink>
-            <NavLink href="#teacher" onClick={handleLinkClick}>Teacher</NavLink>
-            <NavLink href="#courses" onClick={handleLinkClick}>Courses</NavLink>
+            <NavLink href="#progress" onClick={handleLinkClick}>Progress</NavLink>
+            <NavLink href="#stage" onClick={handleLinkClick}>Teacher</NavLink>
+            <NavLink href="#upcoming" onClick={handleLinkClick}>Courses</NavLink>
             <NavLink href="#courses" onClick={handleLinkClick}><FaRegUserCircle className='user'/></NavLink>
             
             

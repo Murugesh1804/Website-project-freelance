@@ -33,7 +33,7 @@ const Progress = () => {
   };
 
   return (
-    <Container>
+    <Container id='progress'>
       <PageTitle>Progress Dashboard</PageTitle>
       <Content>
         <LeftColumn>
