@@ -59,19 +59,20 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+
 `;
 
 const WelcomeSection = styled.div`
-  flex: 1;
+  flex: 2;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   background-color: #fee3c1;
-  padding: 20px;
   gap: 20px;
-  margin-top: 2rem;
+  margin-top: 4.5rem;
+  padding: 20px;
+  border-radius:30px;
 
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -90,10 +91,12 @@ const WelcomeSection = styled.div`
 `;
 
 const ProfileImage = styled.img`
-  width: 180px;
-  height: 180px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
+  margin-top:5px;
+  margin-bottom:5px;
 
   @media (max-width: 768px) {
     width: 150px;
@@ -120,6 +123,7 @@ const Content = styled.div`
 
 const Title = styled.h1`
   margin: 0;
+  margin-top:5px;
   font-size: 1.8rem;
 
   @media (max-width: 768px) {
@@ -132,8 +136,11 @@ const Title = styled.h1`
 `;
 
 const Description = styled.p`
-  margin: 0;
+  margin-left:4px ;
   font-size: 1.2rem;
+  margin-top:5px;
+  margin-bottom:5px;
+
 
   @media (max-width: 768px) {
     font-size: 1.1rem;
@@ -145,29 +152,23 @@ const Description = styled.p`
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
-  background-color: #fda638;
+  padding: 10px 60px;
+  font-size: 1.1rem;
+  font-family: Poppins, sans-serif;
+  color: #fff;
+  background-color: #FDA537;
   border: none;
-  color: white;
-  border-radius: 20px;
+  border-radius: 30px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 10px;
+  margin-bottom:5px;
 
   &:hover {
-    transform: scale(1.05);
+    background-color: #FDA538;
   }
 
   @media (max-width: 768px) {
-    font-size: 1rem;
-    padding: 8px 16px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-    padding: 6px 12px;
+    width: 100%; /* Make button full-width on smaller screens */
   }
 `;
 
@@ -179,7 +180,7 @@ const ButtonSection = styled.div`
   margin-top: 20px;
 
   @media (max-width: 480px) {
-    flex-direction: column;
+    flex-direction: row;
     gap: 5px;
   }
 `;
@@ -218,7 +219,7 @@ const ContentSection = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
   text-align: center;
-  min-height: 300px; /* Increased default height */
+  min-height: 250px; /* Increased default height */
   display: flex;
   align-items: center;
   justify-content: center;

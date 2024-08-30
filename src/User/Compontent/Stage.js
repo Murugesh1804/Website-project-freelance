@@ -59,7 +59,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 50px;
   background-color: #FEE3C1;
 `;
 
@@ -77,11 +77,18 @@ const UpBox = styled.div`
   background-color: transparent;
   padding: 20px;
   border-radius: 8px;
+  margin-top:60px;
  
 
   @media (max-width: 768px) {
     flex-direction: column;
     text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    text-align: center;
+    margin-top:150px;
   }
 `;
 
@@ -117,6 +124,7 @@ const Description = styled.p`
   margin-top: 10px;
   font-size: 1rem;
   color: #666;
+  text-align:justify;
 
   @media (max-width: 480px) {
     font-size: 0.9rem;
@@ -170,12 +178,13 @@ const InstructorName = styled.p`
 `;
 
 const Button = styled.button`
-  padding: 8px 16px;
+  padding: 13px 35px;
   margin-top: 10px;
+  font-family:poppins ;
   background-color: #28a745;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px;
   cursor: pointer;
   transition: background-color 0.3s;
 
@@ -185,12 +194,13 @@ const Button = styled.button`
 `;
 
 const LockedButton = styled.button`
-  padding: 8px 16px;
+  padding: 13px 35px;
+   font-family:poppins ;
   margin-top: 10px;
   background-color: #d9534f;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px;
   cursor: not-allowed;
 `;
 
@@ -218,6 +228,7 @@ const Button1 = styled.button`
   @media (max-width: 480px) {
     font-size: 0.9rem;
     padding: 6px 12px;
+    align-items:center;
   }
 `;
 

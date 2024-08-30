@@ -161,6 +161,7 @@ const NavLinks = styled.div`
   gap: 20px;
   margin-left: auto;
   margin-right:40px;
+  margin-top:12px;
   .user{
     font-size: 2rem;
   }
