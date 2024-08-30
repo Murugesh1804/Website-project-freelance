@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import "@fontsource/poppins";
 
@@ -50,7 +51,7 @@ const Nav = ({ isLoggedIn }) => {
     const targetId = e.currentTarget.getAttribute('href').substring(1);
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
-      const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 1; // Adjust the offset as needed
+      const offsetTop = targetElement.getBoundingClientRect().top + window.pageYOffset - 1; 
       window.scrollTo({
         top: offsetTop,
         behavior: 'smooth',
@@ -72,7 +73,9 @@ const Nav = ({ isLoggedIn }) => {
             <NavLink href="#teacher" onClick={handleLinkClick}>Teacher</NavLink>
             <NavLink href="#courses" onClick={handleLinkClick}>Courses</NavLink>
             <NavLink href="#pricing" onClick={handleLinkClick}>Pricing</NavLink>
-            {!isLoggedIn && <NavLink href="#login" onClick={handleLinkClick}>Login</NavLink>}
+            {!isLoggedIn && (
+              <StyledLink to="/login">Login</StyledLink>
+            )}
           </NavLinks>
         </NavSection>
         <ToggleButton onClick={toggleSidebar}>
@@ -98,7 +101,9 @@ const Nav = ({ isLoggedIn }) => {
           <SidebarLink href="#teacher" onClick={handleLinkClick}>Teacher</SidebarLink>
           <SidebarLink href="#courses" onClick={handleLinkClick}>Courses</SidebarLink>
           <SidebarLink href="#pricing" onClick={handleLinkClick}>Pricing</SidebarLink>
-          {!isLoggedIn && <SidebarLink href="#login" onClick={handleLinkClick}>Login</SidebarLink>}
+          {!isLoggedIn && (
+            <StyledLink to="/login">Login</StyledLink>
+          )}
         </SidebarContent>
       </Sidebar>
     </Container>
@@ -176,6 +181,17 @@ const NavLink = styled.a`
   }
 `;
 
+const StyledLink = styled(Link)`
+  color: black;
+  text-decoration: none;
+  font-size: 1rem;
+  font-family: poppins;
+
+  &:hover {
+    color: #1EAAF1;
+  }
+`;
+
 const ToggleButton = styled.button`
   background: none;
   border: none;
@@ -234,8 +250,8 @@ const Backdrop = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 500;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 `;
 
 export default Nav;

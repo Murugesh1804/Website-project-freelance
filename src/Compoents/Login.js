@@ -1,7 +1,81 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
-import { AiOutlineClose } from 'react-icons/ai';
+import {  AiOutlineArrowLeft } from 'react-icons/ai';
+import { Link, useNavigate } from 'react-router-dom';
+
+const Login = ({ onClose }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const Navigator = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(username && password){
+      Navigator('/UserPanel'); 
+    }
+    else{
+      alert("Enter Fields to Process..");
+    }
+  
+  };
+
+  return (
+    <Overlay>
+      <PopupContainer>
+        <BackButton onClick={onClose}>
+          <Link to="/">  <AiOutlineArrowLeft /> </Link>
+        </BackButton>
+
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <Label>Username or Email</Label>
+            <InputField
+              type="text"
+              placeholder="Enter your username or email"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <Label>Password</Label>
+            <InputField
+              type="password"
+              placeholder="At least 8 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <ForgotPassword>
+            <a href="#forgot-password">Forgot Password?</a>
+          </ForgotPassword>
+          <LoginButton type="submit">Log in</LoginButton>
+        </form>
+
+        <Divider><span>Or sign in with</span></Divider>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <SocialButton bgColor="#db4437">
+            <FaGoogle />
+            Google
+          </SocialButton>
+          <SocialButton bgColor="#3b5998">
+            <FaFacebook />
+            Facebook
+          </SocialButton>
+        </div>
+
+        <SignupPrompt>
+          Don't have an account? <Link to="/register">Sign Up</Link>
+        </SignupPrompt>
+      </PopupContainer>
+    </Overlay>
+  );
+};
 
 const Overlay = styled.div`
   position: fixed;
@@ -9,7 +83,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +91,7 @@ const Overlay = styled.div`
 `;
 
 const PopupContainer = styled.div`
-  position: relative; /* Position relative for the close button */
+  position: relative; /* Position relative for the back and close buttons */
   background-color: #fff;
   padding: 40px;
   border-radius: 12px;
@@ -31,10 +105,10 @@ const PopupContainer = styled.div`
   }
 `;
 
-const CloseButton = styled.button`
+const BackButton = styled.button`
   position: absolute;
   top: 10px;
-  right: 10px;
+  left: 10px;
   background: none;
   border: none;
   font-size: 18px;
@@ -49,7 +123,7 @@ const CloseButton = styled.button`
 const InputField = styled.input`
   width: 100%;
   padding: 12px;
-  margin: 5px 0 20px; /* Updated to add space between input and label */
+  margin: 5px 0 20px;
   border-radius: 8px;
   border: 1px solid #ddd;
   font-size: 16px;
@@ -69,7 +143,7 @@ const InputField = styled.input`
 const Label = styled.label`
   display: block;
   text-align: left;
-  margin-bottom: 5px; /* Space between label and input */
+  margin-bottom: 5px;
   font-weight: 500;
   color: #333;
 `;
@@ -182,50 +256,5 @@ const SignupPrompt = styled.p`
     font-size: 13px;
   }
 `;
-
-const Login = ({ onClose }) => {
-  return (
-    <Overlay>
-      <PopupContainer>
-        <CloseButton onClick={onClose}>
-          <AiOutlineClose />
-        </CloseButton>
-
-        <h2>Login</h2>
-        <form>
-          <div>
-            <Label>Username or Email</Label>
-            <InputField type="text" placeholder="Enter your username or email" required />
-          </div>
-          <div>
-            <Label>Password</Label>
-            <InputField type="password" placeholder="At least 8 characters" required />
-          </div>
-          <ForgotPassword>
-            <a href="#forgot-password">Forgot Password?</a>
-          </ForgotPassword>
-          <LoginButton type="submit">Log in</LoginButton>
-        </form>
-
-        <Divider><span>Or sign in with</span></Divider>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <SocialButton bgColor="#db4437">
-            <FaGoogle />
-            Google
-          </SocialButton>
-          <SocialButton bgColor="#3b5998">
-            <FaFacebook />
-            Facebook
-          </SocialButton>
-        </div>
-
-        <SignupPrompt>
-          Don't have an account? <a href="#signup">Sign Up</a>
-        </SignupPrompt>
-      </PopupContainer>
-    </Overlay>
-  );
-};
 
 export default Login;

@@ -1,7 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
-import { AiOutlineClose } from 'react-icons/ai';
+
+import {  AiOutlineArrowLeft } from 'react-icons/ai';
+import { Link, useNavigate } from 'react-router-dom';
+
+const SignUp = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(username&&password&&email){
+      navigate('/login');
+    }
+    else{
+      alert("Enter All Field");
+    }
+   
+  };
+
+  return (
+    <Overlay>
+      <PopupContainer>
+      <BackButton >
+          <Link to="/login">  <AiOutlineArrowLeft /> </Link>
+        </BackButton>
+        <h2>Sign Up</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <Label>Username</Label>
+            <InputField
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <Label>Email</Label>
+            <InputField
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <Label>Password</Label>
+            <InputField
+              type="password"
+              placeholder="At least 8 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <ForgotPassword>
+            <a href="#forgot-password">Forgot Password?</a>
+          </ForgotPassword>
+          <SignupButton type="submit">Sign Up</SignupButton>
+        </form>
+
+        <Divider><span>Or sign up with</span></Divider>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <SocialButton bgColor="#db4437">
+            <FaGoogle />
+            Google
+          </SocialButton>
+          <SocialButton bgColor="#3b5998">
+            <FaFacebook />
+            Facebook
+          </SocialButton>
+        </div>
+
+        <LoginPrompt>
+          Already have an account? <Link to="/login">Login</Link>
+        </LoginPrompt>
+      </PopupContainer>
+    </Overlay>
+  );
+};
+
+
 
 const Overlay = styled.div`
   position: fixed;
@@ -9,11 +95,26 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+ 
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+`;
+
+const BackButton = styled.button`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #888;
+
+  &:hover {
+    color: #333;
+  }
 `;
 
 const PopupContainer = styled.div`
@@ -182,54 +283,5 @@ const LoginPrompt = styled.p`
     font-size: 13px;
   }
 `;
-
-const SignUp = () => {
-  return (
-    <Overlay>
-      <PopupContainer>
-        <CloseButton onClick={() => alert('Close button clicked!')}>
-          <AiOutlineClose />
-        </CloseButton>
-
-        <h2>SignUp</h2>
-        <form>
-          <div>
-            <Label>Username</Label>
-            <InputField type="text" placeholder="Walter" required />
-          </div>
-          <div>
-            <Label>Email</Label>
-            <InputField type="email" placeholder="Example@email.com" required />
-          </div>
-          <div>
-            <Label>Password</Label>
-            <InputField type="password" placeholder="At least 8 characters" required />
-          </div>
-          <ForgotPassword>
-            <a href="#forgot-password">Forgot Password?</a>
-          </ForgotPassword>
-          <SignupButton type="submit">Sign in</SignupButton>
-        </form>
-
-        <Divider><span>Or sign in with</span></Divider>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <SocialButton bgColor="#db4437">
-            <FaGoogle />
-            Google
-          </SocialButton>
-          <SocialButton bgColor="#3b5998">
-            <FaFacebook />
-            Facebook
-          </SocialButton>
-        </div>
-
-        <LoginPrompt>
-          Already have an account? <a href="#login">Login</a>
-        </LoginPrompt>
-      </PopupContainer>
-    </Overlay>
-  );
-};
 
 export default SignUp;

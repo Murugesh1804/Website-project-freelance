@@ -3,9 +3,106 @@ import styled from 'styled-components';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { BiSearchAlt2 } from 'react-icons/bi';
 
+
+const Dashboard = () => {
+  return (
+    <DashboardContainer>
+      <Header>
+        <Title>Kiddos</Title>
+        <UserProfile>
+          <ManagerText>Manager</ManagerText>
+          <SearchIcon />
+        </UserProfile>
+      </Header>
+
+      <MetricsSection>
+        <MetricCard>
+          <MetricNumber>125</MetricNumber>
+          <MetricLabel>Total Enrollments</MetricLabel>
+        </MetricCard>
+        <MetricCard>
+          <MetricNumber>98</MetricNumber>
+          <MetricLabel>Active Users</MetricLabel>
+        </MetricCard>
+        <MetricCard>
+          <MetricNumber>12500</MetricNumber>
+          <MetricLabel>Revenue</MetricLabel>
+        </MetricCard>
+      </MetricsSection>
+
+      <ChartsSection>
+        <ChartCard>
+          <ChartHeader>
+            <ChartTitle>Course Management</ChartTitle>
+            <MoreIcon />
+          </ChartHeader>
+          <EarningsSpending>
+            <EarningCard>
+              <p>Earnings</p>
+              <h2>₹4000</h2>
+            </EarningCard>
+            <EarningCard>
+              <p>Spent</p>
+              <h2>₹3000</h2>
+            </EarningCard>
+          </EarningsSpending>
+        </ChartCard>
+        <ChartCard>
+          <ChartHeader>
+            <ChartTitle>Weekly Revenue</ChartTitle>
+            <MoreIcon />
+          </ChartHeader>
+        </ChartCard>
+      </ChartsSection>
+
+      <UserManagementSection>
+        <TableHeader>
+          <ChartTitle>User Management</ChartTitle>
+          <MoreIcon />
+        </TableHeader>
+        <Table>
+          <thead>
+            <TableRow>
+              <TableHeaderCell>NAME</TableHeaderCell>
+              <TableHeaderCell>STATUS</TableHeaderCell>
+              <TableHeaderCell>DATE</TableHeaderCell>
+              <TableHeaderCell>PROGRESS</TableHeaderCell>
+            </TableRow>
+          </thead>
+          <tbody>
+            <TableRow>
+              <TableCell>Abdul</TableCell>
+              <TableCell>Completed</TableCell>
+              <TableCell>18 Apr 2021</TableCell>
+              <TableCell><div style={{width: '80%', height: '8px', background: '#00aaff', borderRadius: '4px'}}></div></TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Janani</TableCell>
+              <TableCell>Started</TableCell>
+              <TableCell>18 Apr 2021</TableCell>
+              <TableCell><div style={{width: '50%', height: '8px', background: '#00aaff', borderRadius: '4px'}}></div></TableCell>
+            </TableRow>
+          </tbody>
+        </Table>
+      </UserManagementSection>
+
+      <CalendarSection>
+        <CalendarHeader>
+          <ChartTitle>April</ChartTitle>
+          <div>2021</div>
+        </CalendarHeader>
+      </CalendarSection>
+    </DashboardContainer>
+  );
+};
+
+
+
+
 const DashboardContainer = styled.div`
   padding: 40px;
-  background-color: #f7f8fc;
+  background-color: black;
+  color: white;
   font-family: 'Arial', sans-serif;
 `;
 
@@ -18,7 +115,7 @@ const Header = styled.div`
 
 const Title = styled.h1`
   font-size: 24px;
-  color: #222;
+  color: #fff;
 `;
 
 const UserProfile = styled.div`
@@ -188,97 +285,5 @@ const CalendarHeader = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `;
-
-const Dashboard = () => {
-  return (
-    <DashboardContainer>
-      <Header>
-        <Title>Kiddos</Title>
-        <UserProfile>
-          <ManagerText>Manager</ManagerText>
-          <SearchIcon />
-        </UserProfile>
-      </Header>
-
-      <MetricsSection>
-        <MetricCard>
-          <MetricNumber>125</MetricNumber>
-          <MetricLabel>Total Enrollments</MetricLabel>
-        </MetricCard>
-        <MetricCard>
-          <MetricNumber>98</MetricNumber>
-          <MetricLabel>Active Users</MetricLabel>
-        </MetricCard>
-        <MetricCard>
-          <MetricNumber>12500</MetricNumber>
-          <MetricLabel>Revenue</MetricLabel>
-        </MetricCard>
-      </MetricsSection>
-
-      <ChartsSection>
-        <ChartCard>
-          <ChartHeader>
-            <ChartTitle>Course Management</ChartTitle>
-            <MoreIcon />
-          </ChartHeader>
-          <EarningsSpending>
-            <EarningCard>
-              <p>Earnings</p>
-              <h2>₹4000</h2>
-            </EarningCard>
-            <EarningCard>
-              <p>Spent</p>
-              <h2>₹3000</h2>
-            </EarningCard>
-          </EarningsSpending>
-        </ChartCard>
-        <ChartCard>
-          <ChartHeader>
-            <ChartTitle>Weekly Revenue</ChartTitle>
-            <MoreIcon />
-          </ChartHeader>
-        </ChartCard>
-      </ChartsSection>
-
-      <UserManagementSection>
-        <TableHeader>
-          <ChartTitle>User Management</ChartTitle>
-          <MoreIcon />
-        </TableHeader>
-        <Table>
-          <thead>
-            <TableRow>
-              <TableHeaderCell>NAME</TableHeaderCell>
-              <TableHeaderCell>STATUS</TableHeaderCell>
-              <TableHeaderCell>DATE</TableHeaderCell>
-              <TableHeaderCell>PROGRESS</TableHeaderCell>
-            </TableRow>
-          </thead>
-          <tbody>
-            <TableRow>
-              <TableCell>Abdul</TableCell>
-              <TableCell>Completed</TableCell>
-              <TableCell>18 Apr 2021</TableCell>
-              <TableCell><div style={{width: '80%', height: '8px', background: '#00aaff', borderRadius: '4px'}}></div></TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Janani</TableCell>
-              <TableCell>Started</TableCell>
-              <TableCell>18 Apr 2021</TableCell>
-              <TableCell><div style={{width: '50%', height: '8px', background: '#00aaff', borderRadius: '4px'}}></div></TableCell>
-            </TableRow>
-          </tbody>
-        </Table>
-      </UserManagementSection>
-
-      <CalendarSection>
-        <CalendarHeader>
-          <ChartTitle>April</ChartTitle>
-          <div>2021</div>
-        </CalendarHeader>
-      </CalendarSection>
-    </DashboardContainer>
-  );
-};
 
 export default Dashboard;
