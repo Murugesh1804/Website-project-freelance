@@ -140,14 +140,20 @@ const Description = styled.p`
   font-size: 1.2rem;
   margin-top:5px;
   margin-bottom:5px;
+      text-align:justify;
+
 
 
   @media (max-width: 768px) {
     font-size: 1.1rem;
+        text-align:justify;
+    padding:10px;
   }
 
   @media (max-width: 480px) {
     font-size: 1rem;
+    text-align:justify;
+    padding:10px;
   }
 `;
 
@@ -168,7 +174,10 @@ const Button = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 100%; /* Make button full-width on smaller screens */
+    width: 100%; 
+  }
+      @media (max-width: 480px) {
+    width: 95%; 
   }
 `;
 

@@ -179,6 +179,10 @@ const GraphSection = styled.div`
     height: 300px; /* Adjust to ensure consistency */
     max-height: 300px; /* Ensure chart does not overflow */
   }
+
+        @media (max-width: 480px) {
+    min-height: 200px;
+  }
 `;
 
 const GraphTitle = styled.h3`

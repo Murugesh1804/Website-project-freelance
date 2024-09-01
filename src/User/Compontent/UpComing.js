@@ -37,6 +37,11 @@ const Container = styled.div`
   @media (max-width: 768px) {
   height: 50vh;
   }
+    @media (max-width: 480px) {
+  height: 70vh;
+  margin-bottom:20px;
+
+  }
 `;
 
 const Box = styled.div`
@@ -187,7 +192,7 @@ const Button = styled.button`
   font-size: 1.2rem;
   max-width: 20rem;
   font-weight: 600;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   background-color: #fda638;
   border: none;
   color: white;
@@ -201,17 +206,17 @@ const Button = styled.button`
 
   @media (max-width: 1024px) {
     font-size: 1.1rem;
-    padding: 8px 16px;
+    padding: 15px 12px;
   }
 
   @media (max-width: 768px) {
     font-size: 1rem;
-    padding: 8px 16px;
+    padding: 15px 12px;
   }
 
   @media (max-width: 480px) {
     font-size: 0.9rem;
-    padding: 6px 12px;
+    padding: 15px 12px;
   }
 `;
 
