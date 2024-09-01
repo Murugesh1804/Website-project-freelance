@@ -83,6 +83,9 @@ const LeftSide = styled.div`
   @media (max-width: 768px) {
     padding: 15px;
   }
+  @media (max-width: 480px) {
+  margin-top:-30px;
+  }
 `;
 
 const Title = styled.h2`
@@ -101,6 +104,8 @@ const Title = styled.h2`
 
   @media (max-width: 480px) {
     font-size: 1.5rem;
+    margin-top:-50px;
+    margin-bottom:10px;
   }
 `;
 
@@ -139,6 +144,7 @@ const RightSide = styled.div`
 
   @media (max-width: 480px) {
     gap: 10px;
+    margin-top:-60px;
   }
 `;
 
