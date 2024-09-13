@@ -59,8 +59,11 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 50px;
+  padding-left: 50px;
+  padding-right: 50px;
   background-color: #FEE3C1;
+  padding-bottom:50px;
+  margin-top:10px;
 `;
 
 const Box = styled.div`
@@ -88,14 +91,13 @@ const UpBox = styled.div`
   @media (max-width: 480px) {
     flex-direction: column;
     text-align: center;
-    margin-top:150px;
+    margin-top:10px;
   }
 `;
 
 const UpBoxImage = styled.img`
-  width: 150px;
+  object-fit:cover;
   height: 150px;
-  object-fit: cover;
   border-radius: 10px;
   margin-right: 20px;
 
@@ -116,7 +118,7 @@ const Title = styled.h2`
   color: #333;
 
   @media (max-width: 480px) {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 `;
 
@@ -226,9 +228,10 @@ const Button1 = styled.button`
   }
 
   @media (max-width: 480px) {
-    font-size: 0.9rem;
-    padding: 6px 12px;
-    align-items:center;
+    font-size: 1.4rem;
+    padding: 10px 20px;
+    margin-left:15%;
+      border-radius: 30px;
   }
 `;
 
