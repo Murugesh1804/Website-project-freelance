@@ -1,42 +1,56 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
-import {  AiOutlineArrowLeft } from 'react-icons/ai';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
+import Api from '../Api/Api'; // Import axios for making HTTP requests
 
 const Login = ({ onClose }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState(''); // Changed username to email
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // State for error messages
+  const navigate = useNavigate();
 
-  const Navigator = useNavigate();
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(username && password){
-      Navigator('/UserPanel'); 
+    
+    try {
+      // Making a POST request to the login API
+      const response = await Api.post('/Auth/login', { email, password });
+      const { accessToken, user } = response.data;
+
+      // Store token and user details in local storage (or use context/state management)
+      localStorage.setItem('token', accessToken);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      navigate('/UserPanel'); // Navigate to user panel after successful login
+    } catch (error) {
+      // Handle errors
+      if (error.response) {
+        setErrorMessage(error.response.data.message || 'An error occurred');
+      } else {
+        setErrorMessage('An error occurred');
+      }
     }
-    else{
-      alert("Enter Fields to Process..");
-    }
-  
   };
 
   return (
     <Overlay>
       <PopupContainer>
         <BackButton onClick={onClose}>
-          <Link to="/">  <AiOutlineArrowLeft /> </Link>
+          <Link to="/"> <AiOutlineArrowLeft /> </Link>
         </BackButton>
 
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>} {/* Display error messages */}
           <div>
-            <Label>Username or Email</Label>
+            <Label>Email</Label>
             <InputField
-              type="text"
-              placeholder="Enter your username or email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -51,7 +65,7 @@ const Login = ({ onClose }) => {
             />
           </div>
           <ForgotPassword>
-            <a href="#forgot-password">Forgot Password?</a>
+          <Link to="/forgotpassword">Forgot password?</Link>
           </ForgotPassword>
           <LoginButton type="submit">Log in</LoginButton>
         </form>
@@ -83,7 +97,6 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -91,7 +104,7 @@ const Overlay = styled.div`
 `;
 
 const PopupContainer = styled.div`
-  position: relative; /* Position relative for the back and close buttons */
+  position: relative;
   background-color: #fff;
   padding: 40px;
   border-radius: 12px;
@@ -171,6 +184,7 @@ const LoginButton = styled.button`
 const ForgotPassword = styled.div`
   text-align: right;
   font-size: 12px;
+  font-weight: 600;
   margin-top: -8px;
   margin-bottom: 10px;
 
@@ -255,6 +269,12 @@ const SignupPrompt = styled.p`
   @media (max-width: 768px) {
     font-size: 13px;
   }
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
 `;
 
 export default Login;

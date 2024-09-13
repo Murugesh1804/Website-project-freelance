@@ -96,9 +96,9 @@ const Nav = ({ isLoggedIn }) => {
       <Sidebar ref={sidebarRef} isOpen={isOpen}>
         <SidebarContent>
           <SidebarLink href="#home" onClick={handleLinkClick}>Home</SidebarLink>
-          <SidebarLink href="#about" onClick={handleLinkClick}>Progress</SidebarLink>
-          <SidebarLink href="#teacher" onClick={handleLinkClick}>Teacher</SidebarLink>
-          <SidebarLink href="#courses" onClick={handleLinkClick}>Courses</SidebarLink>
+          <SidebarLink href="#progress" onClick={handleLinkClick}>Progress</SidebarLink>
+          <SidebarLink href="#stage" onClick={handleLinkClick}>Teacher</SidebarLink>
+          <SidebarLink href="#upcoming" onClick={handleLinkClick}>Courses</SidebarLink>
           <SidebarLink href="#courses" onClick={handleLinkClick}><FaRegUserCircle className='user'/></SidebarLink>
           
         </SidebarContent>

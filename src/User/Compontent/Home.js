@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import user from '../../Assest/user.png';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [activeSection, setActiveSection] = useState(''); // State to track which section is active
+  const [userData, setUserData] = useState(null); // State to store user data
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const localstoragis = localStorage.getItem('user');
+    if(!localstoragis){
+      navigate('/login'); // Navigate to user panel after successful login
+    }
+    // Fetch user data from localStorage on component mount
+    const fetchedUserData = JSON.parse(localStorage.getItem('user'));
+    setUserData(fetchedUserData);
+  }, []);
 
   const renderContent = () => {
     switch (activeSection) {
@@ -23,7 +36,7 @@ const Home = () => {
       <WelcomeSection>
         <ProfileImage src={user} alt="userprofile" />
         <Content>
-          <Title>Welcome, User!</Title>
+          <Title>Welcome, {userData ? userData.name : 'User'}!</Title> {/* Use user name if available */}
           <Description>We're glad to have you here. Explore our platform and let us know if you have any questions.</Description>
           <Button>Start</Button>
         </Content>
@@ -51,7 +64,7 @@ const Home = () => {
       </ButtonSection>
 
       <ContentSection>{renderContent()}</ContentSection>
-    </Container >
+    </Container>
   );
 };
 
@@ -60,6 +73,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
+  box-sizing: border-box;
 `;
 
 const WelcomeSection = styled.div`
@@ -72,21 +86,21 @@ const WelcomeSection = styled.div`
   gap: 20px;
   margin-top: 4.5rem;
   padding: 20px;
-  border-radius:30px;
+  border-radius: 30px;
+  box-sizing: border-box;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
     flex-direction: column;
-    padding: 15px;
   }
 
   @media (max-width: 768px) {
-    padding: 10px;
+    padding: 15px;
     margin-top: 4rem;
   }
 
   @media (max-width: 480px) {
-    padding: 8px;
-    margin-top: 4rem;
+    padding: 10px;
+    margin-top: 3rem;
   }
 `;
 
@@ -95,12 +109,10 @@ const ProfileImage = styled.img`
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  margin-top:5px;
-  margin-bottom:5px;
 
   @media (max-width: 768px) {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
   }
 
   @media (max-width: 480px) {
@@ -123,24 +135,21 @@ const Content = styled.div`
 
 const Title = styled.h1`
   margin: 0;
-  margin-top:5px;
+  margin-top: 5px;
   font-size: 1.8rem;
 
   @media (max-width: 768px) {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   @media (max-width: 480px) {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
   }
 `;
 
 const Description = styled.p`
-  margin-left:4px ;
+  margin: 5px 0;
   font-size: 1.2rem;
-  margin-top:5px;
-  margin-bottom:5px;
-
 
   @media (max-width: 768px) {
     font-size: 1.1rem;
@@ -161,14 +170,15 @@ const Button = styled.button`
   border-radius: 30px;
   cursor: pointer;
   margin-top: 10px;
-  margin-bottom:5px;
 
   &:hover {
     background-color: #FDA538;
   }
 
   @media (max-width: 768px) {
-    width: 100%; /* Make button full-width on smaller screens */
+    width: 100%;
+    padding: 10px 30px;
+    font-size: 1rem;
   }
 `;
 
@@ -180,7 +190,7 @@ const ButtonSection = styled.div`
   margin-top: 20px;
 
   @media (max-width: 480px) {
-    flex-direction: row;
+    flex-direction: column;
     gap: 5px;
   }
 `;
@@ -193,7 +203,7 @@ const ActionButton = styled.button`
   color: black;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   ${({ isActive }) =>
     isActive &&
@@ -203,6 +213,7 @@ const ActionButton = styled.button`
 
   &:hover {
     text-decoration: none;
+    background-color: #f0f0f0;
   }
 
   @media (max-width: 480px) {
@@ -219,17 +230,17 @@ const ContentSection = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
   text-align: center;
-  min-height: 250px; /* Increased default height */
+  min-height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
 
   @media (max-width: 768px) {
-    min-height: 250px;
+    min-height: 200px;
   }
 
   @media (max-width: 480px) {
-    min-height: 200px;
+    min-height: 150px;
   }
 `;
 
