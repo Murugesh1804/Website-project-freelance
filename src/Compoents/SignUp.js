@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios'; // Import Axios
+
 import { FaGoogle, FaFacebook } from 'react-icons/fa';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
-
+import Api from '../Api/Api'
 const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -24,7 +24,7 @@ const SignUp = () => {
     if (username && password && email) {
       try {
         // Make a POST request to your backend API
-        const response = await axios.post('http://localhost:3500/Auth/register', {
+        const response = await Api.post('/Auth/register', {
           name: username,
           email,
           password,

@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import "@fontsource/poppins";
 import { FaRegUserCircle } from "react-icons/fa";
-const Nav = ({ isLoggedIn }) => {
+const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const sidebarRef = useRef();
-
+   const navigate =useNavigate();
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -59,6 +59,12 @@ const Nav = ({ isLoggedIn }) => {
       setIsOpen(false); 
     }
   };
+  const handleLogout = () => {
+    // Clear local storage and update login state
+    localStorage.clear();
+    
+    navigate('/login'); // Redirect to the login page after logout
+  };
 
   return (
     <Container scrolled={scrolled}>
@@ -72,6 +78,7 @@ const Nav = ({ isLoggedIn }) => {
             <NavLink href="#progress" onClick={handleLinkClick}>Progress</NavLink>
             <NavLink href="#stage" onClick={handleLinkClick}>Teacher</NavLink>
             <NavLink href="#upcoming" onClick={handleLinkClick}>Courses</NavLink>
+            <NavLink href="#" onClick={handleLogout}>Logout</NavLink> 
             <NavLink href="#courses" onClick={handleLinkClick}><FaRegUserCircle className='user'/></NavLink>
             
             
