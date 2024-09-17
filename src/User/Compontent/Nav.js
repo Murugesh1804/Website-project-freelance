@@ -79,7 +79,7 @@ const Nav = () => {
             <NavLink href="#stage" onClick={handleLinkClick}>Teacher</NavLink>
             <NavLink href="#upcoming" onClick={handleLinkClick}>Courses</NavLink>
             <NavLink href="#" onClick={handleLogout}>Logout</NavLink> 
-            <NavLink href="#courses" onClick={handleLinkClick}><FaRegUserCircle className='user'/></NavLink>
+            {/* <NavLink href="#courses" onClick={handleLinkClick}><FaRegUserCircle className='user'/></NavLink> */}
             
             
           </NavLinks>
@@ -107,7 +107,7 @@ const Nav = () => {
           <SidebarLink href="#stage" onClick={handleLinkClick}>Teacher</SidebarLink>
           <SidebarLink href="#upcoming" onClick={handleLinkClick}>Courses</SidebarLink>
           <SidebarLink href="#" onClick={handleLogout}>Logout</SidebarLink>
-          <SidebarLink href="#courses" onClick={handleLinkClick}><FaRegUserCircle className='user'/></SidebarLink>
+          {/* <SidebarLink href="#courses" onClick={handleLinkClick}><FaRegUserCircle className='user'/></SidebarLink> */}
           
         </SidebarContent>
       </Sidebar>

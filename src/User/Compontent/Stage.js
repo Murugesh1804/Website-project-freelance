@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 import upBoxImage from '../../Assest/bg1.jpg';
+import course1 from '../../Assest/course-1.jpg';
 
 
 const Stage = () => {
@@ -119,12 +120,14 @@ const Stage = () => {
 
     return (
       <StageCard locked={!isUnlocked} key={courseId}>
-        <StageImage src={image} alt={`Stage ${courseId}`} />
+        <StageImage src={course1} alt={`Stage ${courseId}`} />
         <StageContent>
           <LevelTitle>{levelTitle}</LevelTitle>
           <Description>{isUnlocked ? description : 'Purchase to unlock this course.'}</Description>
           {isUnlocked ? (
-            <Button>Start {levelTitle}</Button>
+            <Button >
+            <a href='https://forms.gle/hxDXohd9FPr3ZCkU8' style={{textDecoration: "none", color: "white"}} target='_blank' rel='noreferrer'>Start {levelTitle}</a>
+            </Button>
           ) : (
             <Button onClick={() => handlePayment(courseId)}>Buy {levelTitle}</Button>
           )}
