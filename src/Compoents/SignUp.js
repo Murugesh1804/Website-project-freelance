@@ -163,7 +163,7 @@ const SignUp = () => {
   />
 </div>
 
-          </FormGrid>
+</FormGrid>
           
           <SignupButton type="submit">Sign Up</SignupButton>
         </form>
@@ -247,7 +247,7 @@ const FormGrid = styled.div`
 `;
 
 const InputField = styled.input`
-  width: 100%;
+  width: 90%;
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -266,7 +266,7 @@ const InputField = styled.input`
 `;
 
 const SelectField = styled.select`
-  width: 100%;
+  width: 95%;
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -329,6 +329,7 @@ const SocialButtonsContainer = styled.div`
 const SocialButton = styled.button`
   width: 100%;
   padding: 12px;
+  margin-right: 20px;
   background-color: ${(props) => props.bgColor || '#ddd'};
   color: #fff;
   border: none;
