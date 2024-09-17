@@ -106,6 +106,7 @@ const Nav = () => {
           <SidebarLink href="#progress" onClick={handleLinkClick}>Progress</SidebarLink>
           <SidebarLink href="#stage" onClick={handleLinkClick}>Teacher</SidebarLink>
           <SidebarLink href="#upcoming" onClick={handleLinkClick}>Courses</SidebarLink>
+          <SidebarLink href="#" onClick={handleLogout}>Logout</SidebarLink>
           <SidebarLink href="#courses" onClick={handleLinkClick}><FaRegUserCircle className='user'/></SidebarLink>
           
         </SidebarContent>

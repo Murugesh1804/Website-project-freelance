@@ -1,59 +1,141 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import stageImage1 from '../../Assest/course-1.jpg'; // Replace with actual image paths
-import stageImage2 from '../../Assest/course-2.jpg';
-import stageImage3 from '../../Assest/course-3.jpg';
-import upBoxImage from '../../Assest/bg1.jpg'; // Image for UpBox
+import Api from '../../Api/Api'; // Adjust path as necessary
+import upBoxImage from '../../Assest/bg1.jpg';
+
 
 const Stage = () => {
+  const [purchasedCourses, setPurchasedCourses] = useState([]);
+  const [unlockedCourses, setUnlockedCourses] = useState([]);
+  const [courseDetails, setCourseDetails] = useState([]);
+
+  // Retrieve and parse userId from localStorage
+  const userId = JSON.parse(localStorage.getItem('user')); // Ensure userId is securely retrieved
+  const studentId = userId?.studentId;
+
+  useEffect(() => {
+    if (studentId) {
+      fetchPurchasedCourses();
+      fetchAllCourses(); // Fetch all course details
+    }
+  }, [studentId]);
+
+ 
+  const fetchPurchasedCourses = async () => {
+    try {
+      const { data } = await Api.get(`/payment/purchased-courses/${studentId}`);
+      setPurchasedCourses(data);
+      setUnlockedCourses(data); // Update unlocked courses
+    } catch (error) {
+      console.error('Failed to fetch purchased courses', error);
+    }
+  };
+  
+
+  const fetchAllCourses = async () => {
+    try {
+      const { data } = await Api.get('/get-courses');
+      setCourseDetails(data);
+    } catch (error) {
+      console.error('Failed to fetch courses', error);
+    }
+  };
+  const handlePayment = async (courseId) => {
+    try {
+      const { data: course } = await Api.get(`/payment/get-course/${courseId}`);
+      const { amount, courseName } = course;
+  
+      const { data: order } = await Api.post('/payment/create-order', {
+        courseId,
+        userId: studentId,
+        amount,
+        courseName
+      });
+  
+      const options = {
+        key: 'rzp_test_epPmzNozAIcJcC',
+        amount: order.amount,
+        currency: 'INR',
+        name: 'Course Payment',
+        description: 'Purchase Course',
+        order_id: order.id,
+        handler: async (response) => {
+          try {
+            const verifyResponse = await Api.post('/payment/verify-payment', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              courseId,
+              studentId,
+              amount,
+              courseName
+            });
+  
+            alert(verifyResponse.data.message);
+            // Update the state to unlock the purchased course
+            setUnlockedCourses(prev => [...prev, courseId]);
+          } catch (error) {
+            console.error('Payment verification failed', error);
+            alert('Payment verification failed. Please try again.');
+          }
+        },
+        theme: {
+          color: '#3399cc'
+        }
+      };
+  
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error('Payment initiation failed', error);
+      alert('Payment initiation failed. Please try again.');
+    }
+  };
+  
+
   return (
-    <Container id='stage'>
+    <Container>
       <Box>
         <UpBox>
           <UpBoxImage src={upBoxImage} alt="Up Box" />
           <UpBoxContent>
             <Title>Welcome to the Stage</Title>
             <Description>
-              This section provides an overview of our stages. Each stage helps you progress towards your goals with clear guidance and structured learning.
+              Unlock each stage by purchasing the course to progress towards your learning goals.
             </Description>
-            <Button1>Start</Button1>
+            <Button1>Start Learning</Button1>
           </UpBoxContent>
         </UpBox>
+
         <DownBox>
-          <StageCard>
-            <StageImage src={stageImage1} alt="Stage 1" />
-            <StageContent>
-              <LevelTitle>Level 1</LevelTitle>
-              <InstructorName>Instructor: John Doe</InstructorName>
-              <Description>Introduction to the basics. Start your journey here!</Description>
-              <Button>Start Level 1</Button>
-            </StageContent>
-          </StageCard>
-
-          <StageCard locked>
-            <StageImage src={stageImage2} alt="Stage 2" />
-            <StageContent>
-              <LevelTitle>Level 2</LevelTitle>
-              <InstructorName>Instructor: Jane Smith</InstructorName>
-              <Description>This level is locked. Complete Level 1 to unlock.</Description>
-              <LockedButton disabled>Locked</LockedButton>
-            </StageContent>
-          </StageCard>
-
-          <StageCard locked>
-            <StageImage src={stageImage3} alt="Stage 3" />
-            <StageContent>
-              <LevelTitle>Level 3</LevelTitle>
-              <InstructorName>Instructor: Michael Johnson</InstructorName>
-              <Description>This level is locked. Complete Level 2 to unlock.</Description>
-              <LockedButton disabled>Locked</LockedButton>
-            </StageContent>
-          </StageCard>
+          {courseDetails.map(course => renderStageCard(course.courseId, course.imageUrl, course.courseName, course.courseDescription))}
         </DownBox>
       </Box>
     </Container>
   );
+
+  function renderStageCard(courseId, image, levelTitle, description) {
+    const isUnlocked = unlockedCourses.includes(courseId);
+
+    return (
+      <StageCard locked={!isUnlocked} key={courseId}>
+        <StageImage src={image} alt={`Stage ${courseId}`} />
+        <StageContent>
+          <LevelTitle>{levelTitle}</LevelTitle>
+          <Description>{isUnlocked ? description : 'Purchase to unlock this course.'}</Description>
+          {isUnlocked ? (
+            <Button>Start {levelTitle}</Button>
+          ) : (
+            <Button onClick={() => handlePayment(courseId)}>Buy {levelTitle}</Button>
+          )}
+        </StageContent>
+      </StageCard>
+    );
+  }
 };
+
+// Styled-components remain the same as in your provided code
+
 
 const Container = styled.div`
   display: flex;
@@ -81,7 +163,6 @@ const UpBox = styled.div`
   padding: 20px;
   border-radius: 8px;
   margin-top:60px;
- 
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -173,16 +254,10 @@ const LevelTitle = styled.h3`
   color: #333;
 `;
 
-const InstructorName = styled.p`
-  margin: 5px 0;
-  font-size: 0.9rem;
-  color: #777;
-`;
-
 const Button = styled.button`
   padding: 13px 35px;
   margin-top: 10px;
-  font-family:poppins ;
+  font-family: poppins;
   background-color: #28a745;
   color: white;
   border: none;
@@ -195,19 +270,8 @@ const Button = styled.button`
   }
 `;
 
-const LockedButton = styled.button`
-  padding: 13px 35px;
-   font-family:poppins ;
-  margin-top: 10px;
-  background-color: #d9534f;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: not-allowed;
-`;
-
 const Button1 = styled.button`
-  padding: 10px ;
+  padding: 10px;
   max-width: 10rem;
   font-size: 1.2rem;
   font-weight: 600;
@@ -230,10 +294,9 @@ const Button1 = styled.button`
   @media (max-width: 480px) {
     font-size: 1.4rem;
     padding: 10px 20px;
-    margin-left:15%;
-      border-radius: 30px;
+    margin-left: 15%;
+    border-radius: 30px;
   }
 `;
-
 
 export default Stage;
