@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import experienceImage from '../Assest/bg4.jpg'; // Make sure to update the path to your image
+import experienceImage from '../Assest/bg3.png'; 
 
 const Experience = () => {
   return (
@@ -47,7 +47,7 @@ const Container = styled.div`
 const ImageSection = styled.div`
   position: relative;
   width: 100%;
-  height: 100vh; /* Full viewport height */
+  height: 150vh; /* Full viewport height */
   overflow: hidden;
   display: flex;
   justify-content: center;

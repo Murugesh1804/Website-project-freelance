@@ -1,276 +1,187 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { FaBook, FaApple, FaChalkboardTeacher, FaPencilAlt, FaGlobe, FaStar } from 'react-icons/fa';
+import { FaPrayingHands, FaYinYang, FaHeartbeat, FaBrain, FaLeaf, FaSmile } from 'react-icons/fa';
+import Med from '../Assest/r1.jpg'; // Already imported image
+import Yoga from '../Assest/back.jpg'; // New image for Yoga
+import Stress from '../Assest/bg1.jpg'; // New image for Stress Management
+import Mindfulness from '../Assest/bg2.jpg'; // New image for Mindfulness Practices
+import Wellness from '../Assest/bg3.jpg'; // New image for Holistic Wellness
+import Emotional from '../Assest/bg4.jpg'; // New image for Emotional Intelligence
 
-const Offer = () => {
+const offerData = [
+  {
+    icon: <FaPrayingHands />,
+    title: "Meditation Techniques",
+    description: "Discover inner peace through our guided meditation sessions.",
+    image: Med
+  },
+  {
+    icon: <FaYinYang />,
+    title: "Yoga for Balance",
+    description: "Achieve mind-body harmony with our specialized yoga programs.",
+    image: Yoga
+  },
+  {
+    icon: <FaHeartbeat />,
+    title: "Stress Management",
+    description: "Learn effective techniques to reduce stress and anxiety.",
+    image: Stress
+  },
+  {
+    icon: <FaBrain />,
+    title: "Mindfulness Practices",
+    description: "Enhance your awareness and live in the present moment.",
+    image: Mindfulness
+  },
+  {
+    icon: <FaLeaf />,
+    title: "Holistic Wellness",
+    description: "Explore natural ways to improve your overall well-being.",
+    image: Wellness
+  },
+  {
+    icon: <FaSmile />,
+    title: "Emotional Intelligence",
+    description: "Develop better understanding and control of your emotions.",
+    image: Emotional
+  }
+];
+
+
+const ArtOfLivingOffers = () => {
+  const [selectedOffer, setSelectedOffer] = useState(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSelectedOffer(prev => (prev === null || prev >= offerData.length - 1) ? 0 : prev + 1);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <Container id='about'>
-      <LeftSection>
-        <h1>What We Offer</h1>
-        <p>Explore our wide range of educational resources and activities designed to foster a love for learning in children.</p>
-        <GridContainer>
-          <Column>
-            <IconItem>
-              <Icon><FaBook /></Icon>
-              <TextWrapper>
-                <IconText>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis illum labore exercitationem veritatis aliquam reiciendis quam a iste nulla natus!</IconText>
-              </TextWrapper>
-            </IconItem>
-            <IconItem>
-              <Icon><FaApple /></Icon>
-              <TextWrapper>
-                <IconText>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, quaerat? Suscipit quos ut beatae praesentium debitis odit tempora iusto repudiandae!</IconText>
-              </TextWrapper>
-            </IconItem>
-            <IconItem>
-              <Icon><FaChalkboardTeacher /></Icon>
-              <TextWrapper>
-                <IconText>Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae eveniet dolore corrupti aperiam? Omnis, ullam officiis. Reprehenderit cupiditate amet in.</IconText>
-              </TextWrapper>
-            </IconItem>
-          </Column>
-          <Column>
-            <IconItem>
-              <Icon><FaPencilAlt /></Icon>
-              <TextWrapper>
-                <IconText>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sunt dolorem debitis reprehenderit distinctio, rerum nostrum? Recusandae necessitatibus nesciunt labore unde?</IconText>
-              </TextWrapper>
-            </IconItem>
-            <IconItem>
-              <Icon><FaGlobe /></Icon>
-              <TextWrapper>
-                <IconText>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Praesentium itaque consequatur beatae quia voluptate molestiae dolores reprehenderit magni sapiente dignissimos.</IconText>
-              </TextWrapper>
-            </IconItem>
-            <IconItem>
-              <Icon><FaStar /></Icon>
-              <TextWrapper>
-                <IconText>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus enim quam quisquam ipsam dolores praesentium quos repellat quasi et? Assumenda?</IconText>
-              </TextWrapper>
-            </IconItem>
-          </Column>
-        </GridContainer>
-      </LeftSection>
-      <RightSection>
-        <h1>Welcome to Kiddos Learning School</h1>
-        <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus, labore pariatur quibusdam molestiae ullam at repudiandae corporis, reiciendis velit quo in aliquid? Labore dolor ex consequuntur earum sit a laboriosam unde harum quos nam maxime molestiae dolorum, itaque, enim vero aliquam distinctio ad quis eligendi tempora. Itaque dolor soluta asperiores.
-            </p>
-            <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non rerum quas fugit quam aliquid nobis debitis repellat quibusdam fuga amet! Illum vitae dolorem accusamus atque reiciendis eum, error inventore molestias?
-            </p>
-      <Button>Read more</Button>
-      </RightSection>
+    <Container>
+      <Title>Discover the Art of Living</Title>
+      <Subtitle>Embark on a journey to inner peace and self-discovery</Subtitle>
+      
+      <OfferGrid>
+        {offerData.map((offer, index) => (
+          <OfferItem
+            key={index}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setSelectedOffer(index)}
+          >
+            <IconWrapper>{offer.icon}</IconWrapper>
+            <OfferTitle>{offer.title}</OfferTitle>
+          </OfferItem>
+        ))}
+      </OfferGrid>
+
+      <DetailSection>
+        {selectedOffer !== null && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <DetailImage src={offerData[selectedOffer].image} alt={offerData[selectedOffer].title} />
+            <DetailTitle>{offerData[selectedOffer].title}</DetailTitle>
+            <DetailDescription>{offerData[selectedOffer].description}</DetailDescription>
+          </motion.div>
+        )}
+      </DetailSection>
+
+      <CTAButton
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        Start Your Journey
+      </CTAButton>
     </Container>
   );
 };
 
 const Container = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  padding: 100px;
-  width: 100%;
-  box-sizing: border-box;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    text-align: center;
-    padding: 50px; /* Reduce padding for smaller screens */
-  }
-
-  @media (max-width: 480px) {
-    padding: 20px; /* Further reduce padding for mobile devices */
-  }
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  margin-bottom:20px;
 `;
 
-const Button = styled.button`
-  padding: 10px 20px;
+const Title = styled.h1`
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+`;
+
+const Subtitle = styled.p`
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+`;
+
+const OfferGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+`;
+
+const OfferItem = styled(motion.div)`
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+`;
+
+const IconWrapper = styled.div`
+  font-size: 2rem;
+  color: #4a90e2;
+  margin-bottom: 1rem;
+`;
+
+const OfferTitle = styled.h3`
   font-size: 1rem;
-  font-family: Poppins, sans-serif;
-  color: #fff;
-  background-color: #FDA537;
+  color: #333;
+`;
+
+const DetailSection = styled.div`
+  margin-top: 2rem;
+  min-height: 300px;
+`;
+
+const DetailImage = styled.img`
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+`;
+
+const DetailTitle = styled.h2`
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+`;
+
+const DetailDescription = styled.p`
+  font-size: 1rem;
+  color: #666;
+`;
+
+const CTAButton = styled(motion.button)`
+  background-color: #4a90e2;
+  color: white;
   border: none;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
   border-radius: 30px;
   cursor: pointer;
-  margin-top: 15px;
-
-  &:hover {
-    background-color: #FDA538;
-  }
-
-  @media (max-width: 768px) {
-    width: 100%; /* Make button full-width on smaller screens */
-  }
+  margin-top: 2rem;
 `;
 
-const LeftSection = styled.div`
-  padding: 20px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  h2 {
-    margin-top: 0;
-    font-size: 1.5rem;
-  }
-
-  p {
-    margin: 0;
-    font-size: 1rem;
-  }
-
-  @media (max-width: 768px) {
-    background-color: transparent;
-  }
-
-  @media (max-width: 480px) {
-    h2 {
-      font-size: 1.25rem;
-    }
-
-    p {
-      font-size: 0.9rem;
-    }
-  }
-`;
-
-const GridContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: 20px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-
-  @media (max-width: 480px) {
-    width: 100%; /* Ensure full width for small devices */
-  }
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const IconItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 20px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-  }
-`;
-
-const Icon = styled.div`
-  font-size: 30px;
-  background-color: blue;
-  border-radius: 50%;
-  padding: 10px;
-  width: 100px;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-
-  @media (max-width: 768px) {
-    width: 60px;
-    height: 60px;
-    font-size: 28px;
-  }
-
-  @media (max-width: 480px) {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-  }
-`;
-
-const TextWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-family: Poppins, sans-serif;
-  font-size: 1rem;
-
-  @media (max-width: 768px) {
-    align-items: center;
-    text-align: center;
-  }
-`;
-
-const IconText = styled.p`
-  margin: 0;
-  font-size: 0.9rem;
-  color: #555;
-  text-align: justify;
-
-  @media (max-width: 768px) {
-    font-size: 0.85rem;
-    text-align: center;
-  }
-`;
-
-const RightSection = styled.div`
-  width: 100%;
-  border-radius: 8px;
-  font-family: Poppins, sans-serif;
-
-  h1 {
-    margin-top: 0;
-    font-size: 1.5rem; /* Match with LeftSection's h2 size */
-  }
-
-  p {
-    margin: 10px 0 0;
-    font-size: 1rem; /* Match with LeftSection's p size */
-    text-align: justify;
-  }
-
-  @media (max-width: 768px) {
-    padding: 15px;
-
-    h1 {
-      font-size: 1.25rem; /* Adjusted to match the left section on smaller screens */
-    }
-
-    p {
-      font-size: 0.9rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    border-radius: 5px;
-
-    h1 {
-      font-size: 1.25rem;
-    }
-
-    p {
-      font-size: 0.9rem;
-    }
-  }
-
-  @media (max-width: 320px) {
-    padding: 8px;
-
-    h1 {
-      font-size: 1rem;
-    }
-
-    p {
-      font-size: 0.75rem;
-    }
-  }
-`;
-
-
-
-export default Offer;
+export default ArtOfLivingOffers;

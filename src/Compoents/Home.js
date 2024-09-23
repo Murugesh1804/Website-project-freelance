@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import bg1 from '../Assest/bg1.jpg';
-import bg2 from '../Assest/bg2.jpg';
+import backgroundImage from '../Assest/bg.png';
 
 const Home = () => {
-  const [currentImage, setCurrentImage] = useState(bg1);
   const [currentText, setCurrentText] = useState("Perfect Learning For Your Child");
 
   useEffect(() => {
-    const images = [
-      { src: bg1, text: "Perfect Learning For Your Child" },
-      { src: bg2, text: "A Bright Future Starts Here" }
+    const texts = [
+      "Peace begins with a single breath.",
+      "Embark on a journey to lasting tranquility."
     ];
     let index = 0;
     const interval = setInterval(() => {
-      index = (index + 1) % images.length;
-      setCurrentImage(images[index].src);
-      setCurrentText(images[index].text);
-    }, 3000); // Change image every 3 seconds
+      index = (index + 1) % texts.length;
+      setCurrentText(texts[index]);
+    }, 3000); 
 
-    return () => clearInterval(interval); // Clean up on unmount
+    return () => clearInterval(interval); 
   }, []);
 
   return (
     <Container id='home'>
-      <BackgroundImage src={currentImage} alt="Background" />
-      <CenteredText>{currentText}<br></br>
-        <Button className='read'>Read more</Button>
+      <BackgroundImage />
+      <CenteredText>{currentText}<br />
+        <Button className='read'>Start Your Journey</Button>
       </CenteredText>
     </Container>
   );
@@ -45,38 +42,44 @@ const Container = styled.div`
 const Button = styled.button`
   padding: 15px 25px;
   font-size: 1rem;
-  font-family:poppins;
+  font-family: Poppins;
   color: #fff;
-  background-color: #FDA537;
-  border: none;
+  background-color: transparent;
+  border: 2px solid #fff;
   border-radius: 30px;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    background-color: #FDA538;
-  }
+    background-color: #fff;
+    color: #FDA537;
+}
 
   @media (max-width: 768px) {
     font-size: 1rem;
-  }
+}
 `;
-const BackgroundImage = styled.img`
+
+const BackgroundImage = styled.div`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background-image: url(${backgroundImage});
+  background-size: cover;
+  background-position: center;
   z-index: -1;
-  transition: opacity 1s ease-in-out;
+  // margin-top:75px;
+
 
   @media (max-width: 768px) {
-    object-position: center;
-  }
+    background-position: center;
+}
 
   @media (max-width: 480px) {
-    object-position: center;
-  }
+    background-position: center;
+}
 `;
 
 const CenteredText = styled.h1`

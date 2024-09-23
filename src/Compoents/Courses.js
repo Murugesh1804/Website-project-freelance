@@ -1,157 +1,192 @@
 import React from 'react';
 import styled from 'styled-components';
-import course1 from '../Assest/course-1.jpg';
-import course2 from '../Assest/course-2.jpg';
-import course3 from '../Assest/course-3.jpg';
-import course4 from '../Assest/course-4.jpg';
+import beginnerMindfulness from '../Assest/r2.jpg';
+import advancedMeditation from '../Assest/yog2.png';
+import stressManagement from '../Assest/yog3.png';
+
+const courses = [
+  {
+    title: "Beginner's Mindfulness",
+    description: "Start your journey to inner peace with basic mindfulness techniques.",
+    duration: "4 weeks",
+    level: "Beginner",
+    image: beginnerMindfulness
+  },
+  {
+    title: "Advanced Meditation Retreat",
+    description: "Immerse yourself in deep meditation practices to achieve lasting tranquility.",
+    duration: "2 weeks",
+    level: "Advanced",
+    image: advancedMeditation
+  },
+  {
+    title: "Stress Management Mastery",
+    description: "Learn powerful techniques to manage stress and cultivate calm in daily life.",
+    duration: "6 weeks",
+    level: "Intermediate",
+    image: stressManagement
+  }
+];
+
+const CourseCard = ({ course, isMiddle }) => (
+  <StyledCard className={isMiddle ? 'middle' : ''}>
+    <ImageContainer>
+      <CourseImage src={course.image} alt={course.title} />
+      <Overlay>
+        <EnrollButton>Enroll Now</EnrollButton>
+      </Overlay>
+    </ImageContainer>
+    <CardContent>
+      <CourseTitle>{course.title}</CourseTitle>
+      <CourseMetadata>{course.level} • {course.duration}</CourseMetadata>
+      <CourseDescription>{course.description}</CourseDescription>
+    </CardContent>
+    <CardFooter>
+      <FooterText>Next session starts soon</FooterText>
+    </CardFooter>
+  </StyledCard>
+);
 
 const Courses = () => {
   return (
-    <Container id='courses'>
-      <Title><span>Our</span> Courses</Title>
-      <CoursesGrid>
-        <CourseCard>
-          <CourseImage src={course1} alt="Course 1" />
-          <CourseInfo>
-            <CourseTitle>Course Title 1</CourseTitle>
-            <ClassTime>
-                <span>Class Time: </span> 
-                 04:00 PM - 05:30 PM
-                 </ClassTime>
-            <Description>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Description>
-          </CourseInfo>
-        </CourseCard>
-        <CourseCard>
-          <CourseImage src={course2} alt="Course 2" />
-          <CourseInfo>
-            <CourseTitle>Course Title 2</CourseTitle>
-            <ClassTime>
-                <span>Class Time: </span> 
-                 04:00 PM - 05:30 PM
-                 </ClassTime>
-            <Description>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Description>
-          </CourseInfo>
-        </CourseCard>
-        <CourseCard>
-          <CourseImage src={course3} alt="Course 3" />
-          <CourseInfo>
-            <CourseTitle>Course Title 3</CourseTitle>
-            <ClassTime>
-                <span>Class Time: </span> 
-                 04:00 PM - 05:30 PM
-                 </ClassTime>
-            <Description>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Description>
-          </CourseInfo>
-        </CourseCard>
-        <CourseCard>
-          <CourseImage src={course4} alt="Course 4" />
-          <CourseInfo>
-            <CourseTitle>Course Title 4</CourseTitle>
-            <ClassTime>
-                <span>Class Time: </span> 
-                 04:00 PM - 05:30 PM
-                 </ClassTime>
-            <Description>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Description>
-          </CourseInfo>
-        </CourseCard>
-      </CoursesGrid>
+    <Container id="courses">
+      <Title>
+        <span>Discover Inner</span> <span>Mind</span>
+      </Title>
+      <CourseGrid>
+        {courses.map((course, index) => (
+          <CourseCard key={index} course={course} isMiddle={index === 1} />
+        ))}
+      </CourseGrid>
     </Container>
   );
 };
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  margin-top:40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
 `;
 
 const Title = styled.h1`
   font-size: 2.5rem;
-  margin-bottom: 20px;
   text-align: center;
-  color: orange;
-  span{
-    color: blue;
+  margin-bottom: 40px;
+  color: #333;
+  
+  span:first-child {
+    color: #4A90E2;
   }
-  @media (max-width: 768px) {
-    font-size: 2rem;
+  
+  span:last-child {
+    color: #F5A623;
   }
 `;
 
-const CoursesGrid = styled.div`
+const CourseGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1.5fr 1fr;
   gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-
+  
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 15px;
   }
 `;
 
-const CourseCard = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  text-align: left; /* Change alignment for better layout */
+const StyledCard = styled.div`
+  background: white;
   border-radius: 8px;
-  padding: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    text-align: center;
+  &:hover {
+    transform: translateY(-5px);
   }
+
+  &.middle {
+    grid-row: span 2;
+  }
+`;
+
+const ImageContainer = styled.div`
+  position: relative;
+  overflow: hidden;
 `;
 
 const CourseImage = styled.img`
-  width: 200px;
-  height: 200px;
-  border-radius: 8px;
+  width: 100%;
+  height: 400px;
   object-fit: cover;
-  margin-right: 15px;
+  transition: transform 0.3s ease;
 
-  @media (max-width: 768px) {
-    width: 100%;
-    height: auto;
-    margin-right: 0;
-    margin-bottom: 10px;
+  ${StyledCard}:hover & {
+    transform: scale(1.1);
   }
 `;
 
-const CourseInfo = styled.div`
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  color: #333;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 
-  @media (max-width: 768px) {
-    align-items: center;
+  ${StyledCard}:hover & {
+    opacity: 1;
   }
+`;
+
+const EnrollButton = styled.button`
+  background: #4A90E2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #357ABD;
+  }
+`;
+
+const CardContent = styled.div`
+  padding: 20px;
 `;
 
 const CourseTitle = styled.h2`
-color: blue;
   font-size: 1.5rem;
-  margin-bottom: 5px;
-`;
-
-const ClassTime = styled.p`
-  font-size: 1rem;
+  color: #4A90E2;
   margin-bottom: 10px;
-  color: #555;
-  span{
-    font-weight: 500;
-    color: orange;
-  }
 `;
 
-const Description = styled.p`
+const CourseMetadata = styled.p`
   font-size: 0.9rem;
-  margin: 0;
+  color: #F5A623;
+  margin-bottom: 10px;
+`;
+
+const CourseDescription = styled.p`
+  font-size: 1rem;
+  color: #666;
+`;
+
+const CardFooter = styled.div`
+  background: #f8f8f8;
+  padding: 10px 20px;
+`;
+
+const FooterText = styled.p`
+  font-size: 0.9rem;
+  color: #888;
 `;
 
 export default Courses;
