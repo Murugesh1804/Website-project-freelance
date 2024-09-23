@@ -1,7 +1,7 @@
 import React from 'react'
 import Nav from '../Compoents/Nav'
 import Home from '../Compoents/Home'
-import Box from '../Compoents/Box'
+// import Box from '../Compoents/Box'
 import Offer from '../Compoents/Offer'
 import TakeCourse from '../Compoents/TakeCourse'
 import Certified from '../Compoents/Certified'
@@ -20,11 +20,12 @@ const Main = () => {
  <>
  <Nav/>
  <Home/>
- <Box/>
+ {/* <Box/> */}
+ <Courses/>
+
  <Offer/>
  <TakeCourse/>
  <Certified/>
- <Courses/>
  <Experience/>
  <Pricing/>
  <Footer/>
