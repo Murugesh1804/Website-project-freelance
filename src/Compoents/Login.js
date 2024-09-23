@@ -13,17 +13,26 @@ const Login = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+  
     try {
       // Making a POST request to the login API
       const response = await Api.post('/Auth/login', { email, password });
       const { accessToken, user } = response.data;
-
-      // Store token and user details in local storage (or use context/state management)
+  
+      // Store token and user details in local storage
       localStorage.setItem('token', accessToken);
       localStorage.setItem('user', JSON.stringify(user));
-
-      navigate('/UserPanel'); // Navigate to user panel after successful login
+  
+      // Redirect based on the user's role
+      if (user.role === 'admin') {
+        navigate('/AdminPanel'); // Navigate to admin panel if user is an admin
+      } else if (user.role === 'teacher') {
+        navigate('/TeacherPanel'); // Navigate to teacher panel if user is a teacher
+      } else if (user.role === 'student') {
+        navigate('/UserPanel'); // Navigate to user panel if user is a student
+      } else {
+        navigate('/'); // Fallback to home page for other roles
+      }
     } catch (error) {
       // Handle errors
       if (error.response) {
@@ -33,7 +42,7 @@ const Login = ({ onClose }) => {
       }
     }
   };
-
+  
   return (
     <Overlay>
       <PopupContainer>

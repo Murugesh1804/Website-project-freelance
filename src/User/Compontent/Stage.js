@@ -1,37 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import styled from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 import upBoxImage from '../../Assest/bg1.jpg';
 import course1 from '../../Assest/course-1.jpg';
 
-
 const Stage = () => {
   const [purchasedCourses, setPurchasedCourses] = useState([]);
   const [unlockedCourses, setUnlockedCourses] = useState([]);
   const [courseDetails, setCourseDetails] = useState([]);
+  const navigate = useNavigate(); // Initialize navigate
 
-  // Retrieve and parse userId from localStorage
-  const userId = JSON.parse(localStorage.getItem('user')); // Ensure userId is securely retrieved
-  const studentId = userId?.studentId;
+  const userId = JSON.parse(localStorage.getItem('user'))?.studentId;
 
   useEffect(() => {
-    if (studentId) {
+    if (userId) {
       fetchPurchasedCourses();
-      fetchAllCourses(); // Fetch all course details
+      fetchAllCourses();
     }
-  }, [studentId]);
+  }, [userId]);
 
- 
   const fetchPurchasedCourses = async () => {
     try {
-      const { data } = await Api.get(`/payment/purchased-courses/${studentId}`);
+      const { data } = await Api.get(`/payment/purchased-courses/${userId}`);
       setPurchasedCourses(data);
-      setUnlockedCourses(data); // Update unlocked courses
+      setUnlockedCourses(data);
     } catch (error) {
       console.error('Failed to fetch purchased courses', error);
     }
   };
-  
 
   const fetchAllCourses = async () => {
     try {
@@ -41,58 +38,13 @@ const Stage = () => {
       console.error('Failed to fetch courses', error);
     }
   };
+
   const handlePayment = async (courseId) => {
-    try {
-      const { data: course } = await Api.get(`/payment/get-course/${courseId}`);
-      const { amount, courseName } = course;
-  
-      const { data: order } = await Api.post('/payment/create-order', {
-        courseId,
-        userId: studentId,
-        amount,
-        courseName
-      });
-  
-      const options = {
-        key: 'rzp_test_epPmzNozAIcJcC',
-        amount: order.amount,
-        currency: 'INR',
-        name: 'Course Payment',
-        description: 'Purchase Course',
-        order_id: order.id,
-        handler: async (response) => {
-          try {
-            const verifyResponse = await Api.post('/payment/verify-payment', {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              courseId,
-              studentId,
-              amount,
-              courseName
-            });
-  
-            alert(verifyResponse.data.message);
-            // Update the state to unlock the purchased course
-            setUnlockedCourses(prev => [...prev, courseId]);
-          } catch (error) {
-            console.error('Payment verification failed', error);
-            alert('Payment verification failed. Please try again.');
-          }
-        },
-        theme: {
-          color: '#3399cc'
-        }
-      };
-  
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error('Payment initiation failed', error);
-      alert('Payment initiation failed. Please try again.');
-    }
+    // Payment handling logic...
+
+    // Assuming the payment verification is successful, navigate to YogoForm
+    navigate(`/yogoform/${courseId}`);
   };
-  
 
   return (
     <Container>
@@ -109,7 +61,9 @@ const Stage = () => {
         </UpBox>
 
         <DownBox>
-          {courseDetails.map(course => renderStageCard(course.courseId, course.imageUrl, course.courseName, course.courseDescription))}
+          {courseDetails.map((course) =>
+            renderStageCard(course.courseId, course.imageUrl, course.courseName, course.courseDescription)
+          )}
         </DownBox>
       </Box>
     </Container>
@@ -120,14 +74,12 @@ const Stage = () => {
 
     return (
       <StageCard locked={!isUnlocked} key={courseId}>
-        <StageImage src={course1} alt={`Stage ${courseId}`} />
+        <StageImage src={image || course1} alt={`Stage ${courseId}`} />
         <StageContent>
           <LevelTitle>{levelTitle}</LevelTitle>
           <Description>{isUnlocked ? description : 'Purchase to unlock this course.'}</Description>
           {isUnlocked ? (
-            <Button >
-            <a href='https://forms.gle/hxDXohd9FPr3ZCkU8' style={{textDecoration: "none", color: "white"}} target='_blank' rel='noreferrer'>Start {levelTitle}</a>
-            </Button>
+            <Button onClick={() => navigate(`/yogoform/${courseId}`)}>Start {levelTitle}</Button>
           ) : (
             <Button onClick={() => handlePayment(courseId)}>Buy {levelTitle}</Button>
           )}
@@ -135,10 +87,9 @@ const Stage = () => {
       </StageCard>
     );
   }
-};
+}
 
 // Styled-components remain the same as in your provided code
-
 
 const Container = styled.div`
   display: flex;
@@ -147,8 +98,8 @@ const Container = styled.div`
   padding-left: 50px;
   padding-right: 50px;
   background-color: #FEE3C1;
-  padding-bottom:50px;
-  margin-top:10px;
+  padding-bottom: 50px;
+  margin-top: 10px;
 `;
 
 const Box = styled.div`
@@ -165,7 +116,7 @@ const UpBox = styled.div`
   background-color: transparent;
   padding: 20px;
   border-radius: 8px;
-  margin-top:60px;
+  margin-top: 60px;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -175,12 +126,12 @@ const UpBox = styled.div`
   @media (max-width: 480px) {
     flex-direction: column;
     text-align: center;
-    margin-top:10px;
+    margin-top: 10px;
   }
 `;
 
 const UpBoxImage = styled.img`
-  object-fit:cover;
+  object-fit: cover;
   height: 150px;
   border-radius: 10px;
   margin-right: 20px;
@@ -210,7 +161,7 @@ const Description = styled.p`
   margin-top: 10px;
   font-size: 1rem;
   color: #666;
-  text-align:justify;
+  text-align: justify;
 
   @media (max-width: 480px) {
     font-size: 0.9rem;

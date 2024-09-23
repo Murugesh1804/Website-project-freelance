@@ -150,14 +150,6 @@ const Title = styled.h1`
 const Description = styled.p`
   margin: 5px 0;
   font-size: 1.2rem;
-<<<<<<< HEAD
-=======
-  margin-top:5px;
-  margin-bottom:5px;
-      text-align:justify;
-
-
->>>>>>> 5e0edc3f50cbed524b62999cf8a908eda6674060
 
   @media (max-width: 768px) {
     font-size: 1.1rem;
@@ -188,16 +180,9 @@ const Button = styled.button`
   }
 
   @media (max-width: 768px) {
-<<<<<<< HEAD
     width: 100%;
     padding: 10px 30px;
     font-size: 1rem;
-=======
-    width: 100%; 
-  }
-      @media (max-width: 480px) {
-    width: 95%; 
->>>>>>> 5e0edc3f50cbed524b62999cf8a908eda6674060
   }
 `;
 
