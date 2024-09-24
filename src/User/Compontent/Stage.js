@@ -40,11 +40,10 @@ const Stage = () => {
   };
 
   const handlePayment = async (courseId) => {
-<<<<<<< HEAD
     // Payment handling logic...
     // Assuming the payment verification is successful, navigate to YogoForm
     navigate(`/yogoform/${courseId}`);
-=======
+
     try {
       // Retrieve course details
       const { data: course } = await Api.get(`/payment/get-course/${courseId}`);
@@ -96,7 +95,6 @@ const Stage = () => {
       console.error('Payment initiation failed', error);
       alert('Payment initiation failed. Please try again.');
     }
->>>>>>> 3f7049fc967495ec959c20e9098ca0d99ea62ed1
   };
 
   const getStageStatus = (courseId) => {
