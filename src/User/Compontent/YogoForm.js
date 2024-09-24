@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 
@@ -7,6 +7,9 @@ const YogoForm = () => {
   const { courseId } = useParams(); // Get courseId from URL
   const [questions, setQuestions] = useState([]);
   const [formData, setFormData] = useState({});
+
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -17,8 +20,8 @@ const YogoForm = () => {
         if (response && response.data && Array.isArray(response.data)) {
           const formattedQuestions = response.data.map(question => ({
             ...question,
-            options: question.questionType === 'yes-no' 
-              ? ['Yes', 'No'] // Permanent Yes/No options
+            options: question.questionType === 'yes-no'
+              ? ['Yes', 'No']
               : question.options.map(option => option.value)
           }));
           setQuestions(formattedQuestions);
@@ -44,22 +47,36 @@ const YogoForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form data submitted:', formData);
-    
-    // Prepare the data for submission
-    const submissionData = Object.entries(formData).map(([questionId, value]) => ({
-      questionId,
-      answer: value,
-    }));
-
-    // Send submissionData to the backend to store responses
-    Api.post(`/api/courses/${courseId}/submit-responses`, submissionData)
+  
+    const studentId = JSON.parse(localStorage.getItem('user'))?.studentId; // Get studentId from local storage
+    const token = localStorage.getItem('token'); // Retrieve the authentication token
+  console.log("Student id:",studentId);
+    const submissionData = {
+      courseId,
+      studentId, // Include studentId in the request body
+      responses: questions.map((question) => ({
+        questionId: question._id,
+        answer: formData[question._id],
+        questionText: question.questionText,
+        options: question.options,
+      })),
+    };
+  
+    console.log(submissionData);
+    Api.post(`/api/courses/${courseId}/submit-responses`, submissionData, {
+      headers: {
+      Authorization: `Bearer ${token}`
+      },
+    })
       .then(response => {
         alert('Responses submitted successfully!');
+        navigate('/UserPanel')
       })
       .catch(error => {
         console.error('Error submitting responses:', error);
       });
   };
+  
 
   return (
     <FormWrapper>

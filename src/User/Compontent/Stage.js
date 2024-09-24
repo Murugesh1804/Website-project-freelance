@@ -40,9 +40,63 @@ const Stage = () => {
   };
 
   const handlePayment = async (courseId) => {
+<<<<<<< HEAD
     // Payment handling logic...
     // Assuming the payment verification is successful, navigate to YogoForm
     navigate(`/yogoform/${courseId}`);
+=======
+    try {
+      // Retrieve course details
+      const { data: course } = await Api.get(`/payment/get-course/${courseId}`);
+      const { amount, courseName } = course;
+  
+      const { data: order } = await Api.post('/payment/create-order', {
+        courseId,
+        userId: userId,
+        amount,
+        courseName
+      });
+  
+      const options = {
+        key: 'rzp_test_epPmzNozAIcJcC',
+        amount: order.amount,
+        currency: 'INR',
+        name: 'Course Payment',
+        description: 'Purchase Course',
+        order_id: order.id,
+        handler: async (response) => {
+          try {
+            const verifyResponse = await Api.post('/payment/verify-payment', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              courseId,
+             studentId:userId,
+          
+              amount,
+              courseName
+            });
+  console.log("student id: ",userId)
+            alert(verifyResponse.data.message);
+            // Update the state to unlock the purchased course
+            setUnlockedCourses(prev => [...prev, courseId]);
+          } catch (error) {
+            console.error('Payment verification failed', error);
+            alert('Payment verification failed. Please try again.');
+          }
+        },
+        theme: {
+          color: '#3399cc'
+        }
+      };
+  
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error('Payment initiation failed', error);
+      alert('Payment initiation failed. Please try again.');
+    }
+>>>>>>> 3f7049fc967495ec959c20e9098ca0d99ea62ed1
   };
 
   const getStageStatus = (courseId) => {
