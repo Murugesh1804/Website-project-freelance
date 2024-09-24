@@ -113,7 +113,7 @@ const Nav = ({ isLoggedIn }) => {
 const Container = styled.div`
   width: 100vw;
   height: 70px;
-  background-color: white;
+  background-color: ${({ scrolled }) => (scrolled ? 'white' : 'transparent')};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -122,7 +122,7 @@ const Container = styled.div`
   top: 0;
   left: 0;
   z-index: 1000;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 `;
 
 const MainContent = styled.main`

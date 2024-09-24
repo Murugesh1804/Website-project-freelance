@@ -1,8 +1,112 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Flower } from 'lucide-react';
+import Api from '../../Api/Api';
 
+const MindfulnessProgress = () => {
+    const [activeStage, setActiveStage] = useState(1);
+    const [showTip, setShowTip] = useState(false);
+    const [purchasedCourses, setPurchasedCourses] = useState([]);
+    const [stageData, setStageData] = useState([]);
+    const [responseData, setResponseData] = useState({ responses: [] });
+    const userId = JSON.parse(localStorage.getItem('user'))?.studentId;
+
+    useEffect(() => {
+        fetchPurchasedCourses();
+    }, []);
+
+    const fetchPurchasedCourses = async () => {
+        try {
+            const { data } = await Api.get(`/payment/purchased/${userId}`);
+            console.log('Fetched purchased courses:', data);
+            setPurchasedCourses(data);
+        } catch (error) {
+            console.error('Failed to fetch purchased courses', error);
+        }
+    };
+
+    const fetchResponses = async (courseId) => {
+        try {
+            const { data } = await Api.get(`/responses/course/${courseId}/${userId}`);
+            console.log('Fetched responses:', data);
+            setResponseData(data);
+            setStageData(data.responses); // Use the responses directly for the graph
+        } catch (error) {
+            console.error('Failed to fetch responses', error);
+        }
+    };
+
+    const handleStageClick = (index) => {
+        setActiveStage(index + 1);
+        const selectedCourse = purchasedCourses[index];
+        if (selectedCourse) {
+            fetchResponses(selectedCourse.courseId);
+        }
+    };
+
+    return (
+        <Container>
+            <Title>Mindfulness Journey</Title>
+            
+            <GridContainer>
+                <Card>
+                    <CardTitle>Personal Growth Stages</CardTitle>
+                    <StagesContainer>
+                        {purchasedCourses.map((course, index) => (
+                            <Stage 
+                                key={index}
+                                active={activeStage === index + 1}
+                                onClick={() => handleStageClick(index)}
+                            >
+                                <StageHeader>
+                                    <Flower color={activeStage === index + 1 ? '#4338ca' : '#a5b4fc'} size={24} />
+                                    <StageName>{course.courseName}</StageName>
+                                </StageHeader>
+                                {activeStage === index + 1 && (
+                                    <StageDescription>{course.courseDescription}</StageDescription>
+                                )}
+                            </Stage>
+                        ))}
+                    </StagesContainer>
+                </Card>
+
+                <Card>
+                    <CardTitle>Response Metrics</CardTitle>
+                    <ChartContainer>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={stageData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="questionText" />
+                                <YAxis />
+                                <Tooltip />
+                                <Line type="monotone" dataKey="yesCount" stroke="#82ca9d" activeDot={{ r: 8 }} name="Yes" />
+                                <Line type="monotone" dataKey="noCount" stroke="#8884d8" activeDot={{ r: 8 }} name="No" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </ChartContainer>
+                </Card>
+            </GridContainer>
+
+            <div style={{ marginTop: '2rem' }}>
+                <TipButton onClick={() => setShowTip(!showTip)}>
+                    {showTip ? 'Hide' : 'Show'} Mindfulness Tip
+                </TipButton>
+
+                {showTip && (
+                    <CustomAlert>
+                        <AlertTitle>Mindfulness Tip of the Day</AlertTitle>
+                        <p>Take a moment to practice deep breathing. Inhale for 4 counts, hold for 4, and exhale for 4. This simple exercise can help center your mind and reduce stress.</p>
+                    </CustomAlert>
+                )}
+            </div>
+
+           
+        </Container>
+    );
+};
+
+// Styled components (same as before)
 const Container = styled.div`
   background: linear-gradient(to bottom right, #e0e7ff, #e5e1f9);
   padding: 1.5rem;
@@ -67,29 +171,29 @@ const StageHeader = styled.div`
 `;
 
 const StageName = styled.span`
+  font-weight: 500;
   margin-left: 0.5rem;
-  font-weight: 600;
 `;
 
 const StageDescription = styled.p`
   margin-top: 0.5rem;
   font-size: 0.875rem;
-  color: #4b5563;
+  color: #6b7280;
 `;
 
 const ChartContainer = styled.div`
-  width: 100%;
   height: 300px;
 `;
 
 const TipButton = styled.button`
+  margin: 1rem;
+  padding: 0.5rem 1rem;
   background-color: #4338ca;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
   border: none;
+  border-radius: 0.375rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 
   &:hover {
     background-color: #3730a3;
@@ -97,96 +201,27 @@ const TipButton = styled.button`
 `;
 
 const CustomAlert = styled.div`
-  background-color: #e0e7ff;
-  border-left: 4px solid #4338ca;
-  color: #3730a3;
+  background-color: #fef2f2;
+  border-left: 4px solid #dc2626;
   padding: 1rem;
   margin-top: 1rem;
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
 `;
 
-const AlertTitle = styled.p`
-  font-weight: bold;
+const AlertTitle = styled.h3`
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
 `;
 
-const MindfulnessProgress = () => {
-  const [activeStage, setActiveStage] = useState(1);
-  const [showTip, setShowTip] = useState(false);
+const QuestionsContainer = styled.div`
+  margin-top: 1.5rem;
+`;
 
-  const stageData = [
-    { name: 'Inner Peace', value: 60 },
-    { name: 'Mindfulness', value: 75 },
-    { name: 'Self-Awareness', value: 45 },
-    { name: 'Compassion', value: 80 },
-    { name: 'Gratitude', value: 90 },
-  ];
-
-  const stages = [
-    { name: 'Awareness', description: 'Becoming conscious of your thoughts and emotions' },
-    { name: 'Acceptance', description: 'Embracing your experiences without judgment' },
-    { name: 'Action', description: 'Taking mindful steps towards personal growth' },
-  ];
-
-  const handleStageClick = (index) => {
-    setActiveStage(index + 1);
-  };
-
-  return (
-    <Container>
-      <Title>Mindfulness Journey</Title>
-      
-      <GridContainer>
-        <Card>
-          <CardTitle>Personal Growth Stages</CardTitle>
-          <StagesContainer>
-            {stages.map((stage, index) => (
-              <Stage 
-                key={index}
-                active={activeStage === index + 1}
-                onClick={() => handleStageClick(index)}
-              >
-                <StageHeader>
-                  <Flower color={activeStage === index + 1 ? '#4338ca' : '#a5b4fc'} size={24} />
-                  <StageName>{stage.name}</StageName>
-                </StageHeader>
-                {activeStage === index + 1 && (
-                  <StageDescription>{stage.description}</StageDescription>
-                )}
-              </Stage>
-            ))}
-          </StagesContainer>
-        </Card>
-
-        <Card>
-          <CardTitle>Mindfulness Metrics</CardTitle>
-          <ChartContainer>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={stageData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </Card>
-      </GridContainer>
-
-      <div style={{ marginTop: '2rem' }}>
-        <TipButton onClick={() => setShowTip(!showTip)}>
-          {showTip ? 'Hide' : 'Show'} Mindfulness Tip
-        </TipButton>
-
-        {showTip && (
-          <CustomAlert>
-            <AlertTitle>Mindfulness Tip of the Day</AlertTitle>
-            <p>Take a moment to practice deep breathing. Inhale for 4 counts, hold for 4, and exhale for 4. This simple exercise can help center your mind and reduce stress.</p>
-          </CustomAlert>
-        )}
-      </div>
-    </Container>
-  );
-};
+const QuestionItem = styled.div`
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #e0f2fe;
+  border-radius: 0.375rem;
+`;
 
 export default MindfulnessProgress;
