@@ -1,25 +1,41 @@
 import React from 'react';
 import styled from 'styled-components';
-import locked from '../../Assest/frame.png';
+import { Leaf, Lock, Unlock } from 'lucide-react'; // Importing Lucide icons
 
 const UpComing = () => {
   return (
     <Container id='upcoming'>
       <Box>
         <LeftSide>
-          <Title>Upcoming Levels</Title>
-          <Description>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed, tenetur!</Description>
-          <Button>Unlock Next Level</Button>
+          <Title>Your Path to Inner Peace</Title>
+          <Description>
+            Embark on a transformative journey through our mindfulness stages. 
+            Each level brings you closer to self-discovery and lasting tranquility.
+          </Description>
+          <Button>Begin Your Journey</Button>
         </LeftSide>
         <RightSide>
-          <LockedImageContainer>
-            <LockedImage src={locked} alt="Locked Level 2" />
-            <Label>Stage 2 lock</Label>
-          </LockedImageContainer>
-          <LockedImageContainer>
-            <LockedImage src={locked} alt="Locked Level 3" />
-            <Label>Stage 3 lock</Label>
-          </LockedImageContainer>
+          <StageContainer>
+            <StageIcon completed><Unlock size={24} /></StageIcon>
+            <StageInfo>
+              <StageName>Awareness</StageName>
+              <StageDescription>Discover the power of present moment</StageDescription>
+            </StageInfo>
+          </StageContainer>
+          <StageContainer>
+            <StageIcon><Lock size={24} /></StageIcon>
+            <StageInfo>
+              <StageName>Acceptance</StageName>
+              <StageDescription>Embrace life's ebb and flow</StageDescription>
+            </StageInfo>
+          </StageContainer>
+          <StageContainer>
+            <StageIcon><Lock size={24} /></StageIcon>
+            <StageInfo>
+              <StageName>Transcendence</StageName>
+              <StageDescription>Elevate your consciousness</StageDescription>
+            </StageInfo>
+          </StageContainer>
         </RightSide>
       </Box>
     </Container>
@@ -28,202 +44,122 @@ const UpComing = () => {
 
 const Container = styled.div`
   display: flex;
-  justify-content: center; /* Center the content horizontally */
-  padding: 20px;
-  background-color: #FEE3C1;
-  height: 50vh; /* Set height to 80vh */
-  border-radius:30px;
-
-  @media (max-width: 768px) {
-  height: 50vh;
-  }
-    @media (max-width: 480px) {
-  height: 70vh;
-  margin-bottom:20px;
-
-  }
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  min-height: 60vh;
+  border-radius: 30px;
 `;
 
 const Box = styled.div`
   display: flex;
   width: 100%;
-  max-width: 1200px; /* Adjust the max-width as needed */
+  max-width: 1200px;
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 
-
-  @media (max-width: 1024px) { /* Tablet screens */
+  @media (max-width: 1024px) {
     flex-direction: column;
     text-align: center;
-    height: auto; /* Remove fixed height for better responsiveness */
-  }
-
-  @media (max-width: 768px) { /* Mobile screens */
-    padding: 15px;
-  }
-
-  @media (max-width: 480px) { /* Smaller mobile screens */
-    padding: 10px;
   }
 `;
 
 const LeftSide = styled.div`
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   padding: 20px;
-
-  @media (max-width: 1024px) {
-    margin-bottom: 20px;
-  }
-
-  @media (max-width: 768px) {
-    padding: 15px;
-  }
-  @media (max-width: 480px) {
-  margin-top:-30px;
-  }
 `;
 
 const Title = styled.h2`
-  font-size: 2.5rem; /* Adjusted for responsiveness */
+  font-size: 2.5rem;
   font-weight: 800;
-  color: #333;
-  margin: 0;
-
-  @media (max-width: 1024px) {
-    font-size: 2rem;
-  }
+  color: #006064;
+  margin-bottom: 20px;
 
   @media (max-width: 768px) {
-    font-size: 1.8rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.5rem;
-    margin-top:-50px;
-    margin-bottom:10px;
+    font-size: 2rem;
   }
 `;
 
 const Description = styled.p`
-  font-size: 1rem;
-  color: #666;
-  margin: 10px 0;
-
-  @media (max-width: 1024px) {
-    font-size: 0.9rem;
-  }
+  font-size: 1.1rem;
+  color: #00838f;
+  margin-bottom: 30px;
+  line-height: 1.6;
 
   @media (max-width: 768px) {
-    font-size: 0.8rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 0.7rem;
-  }
-`;
-
-const RightSide = styled.div`
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  flex-wrap: wrap; /* Ensure items wrap on smaller screens */
-  
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  @media (max-width: 768px) {
-    gap: 15px;
-  }
-
-  @media (max-width: 480px) {
-    gap: 10px;
-    margin-top:-60px;
-  }
-`;
-
-const LockedImageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-`;
-
-const LockedImage = styled.img`
-  width: 150px; /* Adjusted size for responsiveness */
-  height: 150px;
-
-  @media (max-width: 1024px) {
-    width: 130px;
-    height: 130px;
-  }
-
-  @media (max-width: 768px) {
-    width: 110px;
-    height: 110px;
-  }
-
-  @media (max-width: 480px) {
-    width: 90px;
-    height: 90px;
-  }
-`;
-
-const Label = styled.span`
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #555;
-
-  @media (max-width: 1024px) {
     font-size: 1rem;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
   }
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 1.2rem;
-  max-width: 20rem;
+  padding: 12px 24px;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-top: 1rem;
-  background-color: #fda638;
-  border: none;
+  background-color: #00acc1;
   color: white;
-  border-radius: 20px;
+  border: none;
+  border-radius: 30px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    transform: scale(1.05);
+    background-color: #0097a7;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 151, 167, 0.4);
   }
+`;
 
-  @media (max-width: 1024px) {
-    font-size: 1.1rem;
-    padding: 15px 12px;
-  }
+const RightSide = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+`;
 
-  @media (max-width: 768px) {
-    font-size: 1rem;
-    padding: 15px 12px;
-  }
+const StageContainer = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
 
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-    padding: 15px 12px;
+  &:hover {
+    transform: translateX(10px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
+`;
+
+const StageIcon = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: ${props => props.completed ? '#4caf50' : '#bdbdbd'};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+  color: white;
+`;
+
+const StageInfo = styled.div`
+  flex: 1;
+`;
+
+const StageName = styled.h3`
+  font-size: 1.2rem;
+  color: #00838f;
+  margin-bottom: 5px;
+`;
+
+const StageDescription = styled.p`
+  font-size: 0.9rem;
+  color: #546e7a;
 `;
 
 export default UpComing;

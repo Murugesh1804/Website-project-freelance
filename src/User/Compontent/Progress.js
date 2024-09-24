@@ -1,198 +1,192 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Flower } from 'lucide-react';
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
+const Container = styled.div`
+  background: linear-gradient(to bottom right, #e0e7ff, #e5e1f9);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
 
-const Progress = () => {
-  const data = {
-    labels: ['Stage 1', 'Stage 2', 'Stage 3'],
-    datasets: [
-      {
-        label: 'Completion Percentage',
-        data: [80, 60, 30], // Replace with actual progress values
-        backgroundColor: ['#4caf50', '#fbc02d', '#e57373'],
-      },
-    ],
-  };
+const Title = styled.h1`
+  font-size: 1.875rem;
+  font-weight: bold;
+  text-align: center;
+  color: #3730a3;
+  margin-bottom: 2rem;
+`;
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Progress Over Stages',
-      },
-    },
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
+const Card = styled.div`
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const CardTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #4338ca;
+  margin-bottom: 1rem;
+`;
+
+const StagesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const Stage = styled.div`
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  background-color: ${props => props.active ? '#e0e7ff' : 'transparent'};
+  box-shadow: ${props => props.active ? '0 2px 4px rgba(0, 0, 0, 0.1)' : 'none'};
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+`;
+
+const StageHeader = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const StageName = styled.span`
+  margin-left: 0.5rem;
+  font-weight: 600;
+`;
+
+const StageDescription = styled.p`
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+`;
+
+const ChartContainer = styled.div`
+  width: 100%;
+  height: 300px;
+`;
+
+const TipButton = styled.button`
+  background-color: #4338ca;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #3730a3;
+  }
+`;
+
+const CustomAlert = styled.div`
+  background-color: #e0e7ff;
+  border-left: 4px solid #4338ca;
+  color: #3730a3;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.25rem;
+`;
+
+const AlertTitle = styled.p`
+  font-weight: bold;
+`;
+
+const MindfulnessProgress = () => {
+  const [activeStage, setActiveStage] = useState(1);
+  const [showTip, setShowTip] = useState(false);
+
+  const stageData = [
+    { name: 'Inner Peace', value: 60 },
+    { name: 'Mindfulness', value: 75 },
+    { name: 'Self-Awareness', value: 45 },
+    { name: 'Compassion', value: 80 },
+    { name: 'Gratitude', value: 90 },
+  ];
+
+  const stages = [
+    { name: 'Awareness', description: 'Becoming conscious of your thoughts and emotions' },
+    { name: 'Acceptance', description: 'Embracing your experiences without judgment' },
+    { name: 'Action', description: 'Taking mindful steps towards personal growth' },
+  ];
+
+  const handleStageClick = (index) => {
+    setActiveStage(index + 1);
   };
 
   return (
-    <Container id='progress'>
-      <PageTitle>Progress Dashboard</PageTitle>
-      <Content>
-        <LeftColumn>
-          <StageTrack>
-            <Stage>
-              <StageTitle>Stage 1</StageTitle>
-              <StageLine active />
-            </Stage>
-            <Stage>
-              <StageTitle>Stage 2</StageTitle>
-              <StageLine active />
-            </Stage>
-            <Stage>
-              <StageTitle>Stage 3</StageTitle>
-              <StageLine />
-            </Stage>
-          </StageTrack>
-        </LeftColumn>
-        <RightColumn>
-          <GraphSection>
-            <GraphTitle>Overall Progress</GraphTitle>
-            <Bar data={data} options={options} />
-          </GraphSection>
-        </RightColumn>
-      </Content>
+    <Container>
+      <Title>Mindfulness Journey</Title>
+      
+      <GridContainer>
+        <Card>
+          <CardTitle>Personal Growth Stages</CardTitle>
+          <StagesContainer>
+            {stages.map((stage, index) => (
+              <Stage 
+                key={index}
+                active={activeStage === index + 1}
+                onClick={() => handleStageClick(index)}
+              >
+                <StageHeader>
+                  <Flower color={activeStage === index + 1 ? '#4338ca' : '#a5b4fc'} size={24} />
+                  <StageName>{stage.name}</StageName>
+                </StageHeader>
+                {activeStage === index + 1 && (
+                  <StageDescription>{stage.description}</StageDescription>
+                )}
+              </Stage>
+            ))}
+          </StagesContainer>
+        </Card>
+
+        <Card>
+          <CardTitle>Mindfulness Metrics</CardTitle>
+          <ChartContainer>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={stageData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </Card>
+      </GridContainer>
+
+      <div style={{ marginTop: '2rem' }}>
+        <TipButton onClick={() => setShowTip(!showTip)}>
+          {showTip ? 'Hide' : 'Show'} Mindfulness Tip
+        </TipButton>
+
+        {showTip && (
+          <CustomAlert>
+            <AlertTitle>Mindfulness Tip of the Day</AlertTitle>
+            <p>Take a moment to practice deep breathing. Inhale for 4 counts, hold for 4, and exhale for 4. This simple exercise can help center your mind and reduce stress.</p>
+          </CustomAlert>
+        )}
+      </div>
     </Container>
   );
 };
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: white;
-  min-height: 400px;
-  margin-top:20px;
-  margin-bottom:30px;
-`;
-
-const PageTitle = styled.h1`
-  font-size: 2rem;
-  font-family:poppins;
-  color: #333;
-  text-align: center;
-  margin-bottom: 20px;
-
-  @media (max-width: 1200px) {
-    font-size: 1.8rem;
-  }
-
-  @media (max-width: 992px) {
-    font-size: 1.6rem;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 1.4rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.2rem;
-  }
-`;
-
-const Content = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  padding-right: 60px;
-  padding-left: 60px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const LeftColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  min-height: 300px;
-
-  @media (max-width: 768px) {
-    min-height: auto;
-  }
-`;
-
-const StageTrack = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const Stage = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const StageTitle = styled.span`
-  flex: 1;
-  font-size: 1rem;
-  color: #555;
-
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
-`;
-
-const StageLine = styled.div`
-  flex: 2;
-  height: 10px;
-  background-color: ${({ active }) => (active ? '#4caf50' : '#ddd')};
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-`;
-
-const RightColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  min-height: 300px;
-
-  @media (max-width: 768px) {
-    min-height: auto;
-  }
-      @media (max-width: 480px) {
-    min-height: 200px;
-  }
-`;
-
-const GraphSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-
-  canvas {
-    max-width: 100%;
-    height: 300px; /* Adjust to ensure consistency */
-    max-height: 300px; /* Ensure chart does not overflow */
-  }
-
-        @media (max-width: 480px) {
-    min-height: 200px;
-  }
-`;
-
-const GraphTitle = styled.h3`
-  margin: 0;
-  font-size: 1.3rem;
-  color: #333;
-
-  @media (max-width: 768px) {
-    font-size: 1.2rem;
-  }
-`;
-
-export default Progress;
+export default MindfulnessProgress;

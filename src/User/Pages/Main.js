@@ -15,7 +15,7 @@ const Main = () => {
        <Stage/>
        <Progress/>
        <UpComing/>
-       <Read/>
+       {/* <Read/> */}
        <Footer/>
        </>
   )

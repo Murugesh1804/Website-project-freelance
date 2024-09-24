@@ -4,6 +4,20 @@ import styled from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 import { Book, Lock, Unlock, Award, ChevronRight } from 'lucide-react';
 
+// Import your local images here
+import course1Image from '../../Assest/r1.jpg';
+import course2Image from '../../Assest/yog2.png';
+import course3Image from '../../Assest/yog3.png';
+// Import more course images as needed
+
+// Create an object to map course IDs to local images
+const courseImages = {
+  1: course1Image,
+  2: course2Image,
+  3: course3Image,
+  // Add more mappings as needed
+};
+
 const Stage = () => {
   const [purchasedCourses, setPurchasedCourses] = useState([]);
   const [unlockedCourses, setUnlockedCourses] = useState([]);
@@ -43,58 +57,6 @@ const Stage = () => {
     // Payment handling logic...
     // Assuming the payment verification is successful, navigate to YogoForm
     navigate(`/yogoform/${courseId}`);
-
-    try {
-      // Retrieve course details
-      const { data: course } = await Api.get(`/payment/get-course/${courseId}`);
-      const { amount, courseName } = course;
-  
-      const { data: order } = await Api.post('/payment/create-order', {
-        courseId,
-        userId: userId,
-        amount,
-        courseName
-      });
-  
-      const options = {
-        key: 'rzp_test_epPmzNozAIcJcC',
-        amount: order.amount,
-        currency: 'INR',
-        name: 'Course Payment',
-        description: 'Purchase Course',
-        order_id: order.id,
-        handler: async (response) => {
-          try {
-            const verifyResponse = await Api.post('/payment/verify-payment', {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              courseId,
-             studentId:userId,
-          
-              amount,
-              courseName
-            });
-  console.log("student id: ",userId)
-            alert(verifyResponse.data.message);
-            // Update the state to unlock the purchased course
-            setUnlockedCourses(prev => [...prev, courseId]);
-          } catch (error) {
-            console.error('Payment verification failed', error);
-            alert('Payment verification failed. Please try again.');
-          }
-        },
-        theme: {
-          color: '#3399cc'
-        }
-      };
-  
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error('Payment initiation failed', error);
-      alert('Payment initiation failed. Please try again.');
-    }
   };
 
   const getStageStatus = (courseId) => {
@@ -120,7 +82,7 @@ const Stage = () => {
               active={activeStage === course.courseId}
               status={status}
             >
-              <StageImage src={course.imageUrl || '/placeholder-image.jpg'} alt={course.courseName} />
+              <StageImage src={courseImages[course.courseId] || courseImages[1]} alt={course.courseName} />
               <StageContent>
                 <StageHeader>
                   <StageIcon status={status}>
@@ -157,9 +119,8 @@ const Stage = () => {
     </Container>
   );
 };
-
 const Container = styled.div`
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
   background-color: #f7f7f7;

@@ -1,289 +1,396 @@
-import React from 'react';
-import styled from 'styled-components';
-import { FiMoreHorizontal } from 'react-icons/fi';
-import { BiSearchAlt2 } from 'react-icons/bi';
+import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AlertCircle, User, DollarSign, BookOpen, Activity } from 'lucide-react';
 
+const AdminDashboard = () => {
+  const [activeSection, setActiveSection] = useState('User Details');
+  const [userDetails, setUserDetails] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [stats, setStats] = useState({ totalCollection: 0, totalEnrollments: 0, activeUsers: 0 });
 
-const Dashboard = () => {
+  useEffect(() => {
+    // Simulated data fetching
+    setUserDetails([
+      { id: 1, name: 'John Doe', email: 'john@example.com', joinDate: '2024-01-15' },
+      { id: 2, name: 'Jane Smith', email: 'jane@example.com', joinDate: '2024-02-20' },
+      // Add more user details...
+    ]);
+
+    setTransactions([
+      { id: 1, userId: 1, courseId: 1, amount: 99.99, date: '2024-03-01' },
+      { id: 2, userId: 2, courseId: 2, amount: 149.99, date: '2024-03-05' },
+      // Add more transactions...
+    ]);
+
+    setCourses([
+      { id: 1, title: 'Mindfulness Meditation', students: 150, revenue: 14999 },
+      { id: 2, title: 'Yoga for Beginners', students: 200, revenue: 19999 },
+      // Add more courses...
+    ]);
+
+    setStats({
+      totalCollection: 34998,
+      totalEnrollments: 350,
+      activeUsers: 280
+    });
+  }, []);
+
+  const chartData = [
+    { name: 'Mindfulness', students: 150 },
+    { name: 'Yoga', students: 200 },
+    { name: 'Breathing', students: 120 },
+    { name: 'Meditation', students: 180 },
+  ];
+
+  const styles = `
+    .dashboard {
+      display: flex;
+      font-family: 'Arial', sans-serif;
+      color: #333;
+      height: 100vh;
+      overflow: hidden;
+      background-color: #f0f4f8;
+    }
+
+    .left-panel {
+      width: 250px;
+      background-color: #1a237e;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+
+    .admin-info {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .admin-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      border: 3px solid white;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+      }
+    }
+
+    .nav-item {
+      padding: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item:hover {
+      background-color: #303f9f;
+      transform: translateX(5px);
+    }
+
+    .nav-item.active {
+      background-color: #3f51b5;
+      border-radius: 5px;
+    }
+
+    .nav-item svg {
+      margin-right: 10px;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .top-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 30%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-title {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    th {
+      background-color: #3f51b5;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #3f51b5;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #303f9f;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        flex-direction: column;
+      }
+
+      .left-panel {
+        width: 100%;
+        order: 2;
+      }
+
+      .main-content {
+        order: 1;
+      }
+
+      .top-stats {
+        flex-direction: column;
+      }
+
+      .stat-card {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  `;
+
   return (
-    <DashboardContainer>
-      <Header>
-        <Title>Kiddos</Title>
-        <UserProfile>
-          <ManagerText>Manager</ManagerText>
-          <SearchIcon />
-        </UserProfile>
-      </Header>
-
-      <MetricsSection>
-        <MetricCard>
-          <MetricNumber>125</MetricNumber>
-          <MetricLabel>Total Enrollments</MetricLabel>
-        </MetricCard>
-        <MetricCard>
-          <MetricNumber>98</MetricNumber>
-          <MetricLabel>Active Users</MetricLabel>
-        </MetricCard>
-        <MetricCard>
-          <MetricNumber>12500</MetricNumber>
-          <MetricLabel>Revenue</MetricLabel>
-        </MetricCard>
-      </MetricsSection>
-
-      <ChartsSection>
-        <ChartCard>
-          <ChartHeader>
-            <ChartTitle>Course Management</ChartTitle>
-            <MoreIcon />
-          </ChartHeader>
-          <EarningsSpending>
-            <EarningCard>
-              <p>Earnings</p>
-              <h2>₹4000</h2>
-            </EarningCard>
-            <EarningCard>
-              <p>Spent</p>
-              <h2>₹3000</h2>
-            </EarningCard>
-          </EarningsSpending>
-        </ChartCard>
-        <ChartCard>
-          <ChartHeader>
-            <ChartTitle>Weekly Revenue</ChartTitle>
-            <MoreIcon />
-          </ChartHeader>
-        </ChartCard>
-      </ChartsSection>
-
-      <UserManagementSection>
-        <TableHeader>
-          <ChartTitle>User Management</ChartTitle>
-          <MoreIcon />
-        </TableHeader>
-        <Table>
-          <thead>
-            <TableRow>
-              <TableHeaderCell>NAME</TableHeaderCell>
-              <TableHeaderCell>STATUS</TableHeaderCell>
-              <TableHeaderCell>DATE</TableHeaderCell>
-              <TableHeaderCell>PROGRESS</TableHeaderCell>
-            </TableRow>
-          </thead>
-          <tbody>
-            <TableRow>
-              <TableCell>Abdul</TableCell>
-              <TableCell>Completed</TableCell>
-              <TableCell>18 Apr 2021</TableCell>
-              <TableCell><div style={{width: '80%', height: '8px', background: '#00aaff', borderRadius: '4px'}}></div></TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Janani</TableCell>
-              <TableCell>Started</TableCell>
-              <TableCell>18 Apr 2021</TableCell>
-              <TableCell><div style={{width: '50%', height: '8px', background: '#00aaff', borderRadius: '4px'}}></div></TableCell>
-            </TableRow>
-          </tbody>
-        </Table>
-      </UserManagementSection>
-
-      <CalendarSection>
-        <CalendarHeader>
-          <ChartTitle>April</ChartTitle>
-          <div>2021</div>
-        </CalendarHeader>
-      </CalendarSection>
-    </DashboardContainer>
+    <>
+      <style>{styles}</style>
+      <div className="dashboard">
+        <div className="left-panel">
+          <div className="admin-info">
+            <img src="/api/placeholder/80/80" alt="Admin Avatar" className="admin-avatar" />
+            <h3>Admin Name</h3>
+            <p>admin@example.com</p>
+          </div>
+          <div className="nav-item" onClick={() => setActiveSection('User Details')}>
+            <User size={20} />
+            User Details
+          </div>
+          <div className="nav-item" onClick={() => setActiveSection('User Transactions')}>
+            <DollarSign size={20} />
+            User Transactions
+          </div>
+          <div className="nav-item" onClick={() => setActiveSection('Add Course')}>
+            <BookOpen size={20} />
+            Add Course
+          </div>
+          <div className="nav-item" onClick={() => setActiveSection('Course Management')}>
+            <AlertCircle size={20} />
+            Course Management
+          </div>
+          <div className="nav-item" onClick={() => setActiveSection('User Activity')}>
+            <Activity size={20} />
+            User Activity
+          </div>
+        </div>
+        <div className="main-content">
+          <div className="top-stats">
+            <div className="stat-card">
+              <div className="stat-title">Total Collection</div>
+              <div className="stat-value">${stats.totalCollection.toLocaleString()}</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-title">Total Enrollments</div>
+              <div className="stat-value">{stats.totalEnrollments}</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-title">Active Users</div>
+              <div className="stat-value">{stats.activeUsers}</div>
+            </div>
+          </div>
+          {activeSection === 'User Details' && (
+            <div>
+              <h2>User Details</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Join Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userDetails.map(user => (
+                    <tr key={user.id}>
+                      <td>{user.id}</td>
+                      <td>{user.name}</td>
+                      <td>{user.email}</td>
+                      <td>{user.joinDate}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {activeSection === 'User Transactions' && (
+            <div>
+              <h2>User Transactions</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>User ID</th>
+                    <th>Course ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transactions.map(transaction => (
+                    <tr key={transaction.id}>
+                      <td>{transaction.id}</td>
+                      <td>{transaction.userId}</td>
+                      <td>{transaction.courseId}</td>
+                      <td>${transaction.amount}</td>
+                      <td>{transaction.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {activeSection === 'Add Course' && (
+            <div>
+              <h2>Add Course</h2>
+              <form>
+                <div className="form-group">
+                  <label htmlFor="courseTitle">Course Title</label>
+                  <input type="text" id="courseTitle" name="courseTitle" required />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="courseDescription">Course Description</label>
+                  <textarea id="courseDescription" name="courseDescription" rows="4" required></textarea>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="coursePrice">Course Price</label>
+                  <input type="number" id="coursePrice" name="coursePrice" min="0" step="0.01" required />
+                </div>
+                <button type="submit">Add Course</button>
+              </form>
+            </div>
+          )}
+          {activeSection === 'Course Management' && (
+            <div>
+              <h2>Course Management</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Students</th>
+                    <th>Revenue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {courses.map(course => (
+                    <tr key={course.id}>
+                      <td>{course.id}</td>
+                      <td>{course.title}</td>
+                      <td>{course.students}</td>
+                      <td>${course.revenue}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          {activeSection === 'User Activity' && (
+            <div>
+              <h2>User Activity</h2>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="students" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
-
-
-
-const DashboardContainer = styled.div`
-  padding: 40px;
-  background-color: black;
-  color: white;
-  font-family: 'Arial', sans-serif;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  color: #fff;
-`;
-
-const UserProfile = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const ManagerText = styled.div`
-  font-size: 14px;
-  color: #333;
-  margin-right: 20px;
-`;
-
-const SearchIcon = styled(BiSearchAlt2)`
-  font-size: 22px;
-  color: #888;
-  cursor: pointer;
-`;
-
-const MetricsSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px;
-`;
-
-const MetricCard = styled.div`
-  flex: 1;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  margin-right: 20px;
-
-  &:last-child {
-    margin-right: 0;
-  }
-`;
-
-const MetricNumber = styled.h2`
-  font-size: 36px;
-  color: #2c3e50;
-  margin-bottom: 10px;
-`;
-
-const MetricLabel = styled.p`
-  font-size: 14px;
-  color: #888;
-`;
-
-const ChartsSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px;
-`;
-
-const ChartCard = styled.div`
-  flex: 1;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-right: 20px;
-
-  &:last-child {
-    margin-right: 0;
-  }
-`;
-
-const ChartHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const ChartTitle = styled.h3`
-  font-size: 16px;
-  color: #2c3e50;
-`;
-
-const MoreIcon = styled(FiMoreHorizontal)`
-  font-size: 20px;
-  color: #888;
-  cursor: pointer;
-`;
-
-const EarningsSpending = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const EarningCard = styled.div`
-  flex: 1;
-  background-color: #f7f8fc;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  margin-right: 20px;
-
-  &:last-child {
-    margin-right: 0;
-  }
-
-  p {
-    margin: 0;
-    font-size: 12px;
-    color: #888;
-  }
-
-  h2 {
-    font-size: 22px;
-    color: #2c3e50;
-    margin: 10px 0;
-  }
-`;
-
-const UserManagementSection = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-`;
-
-const TableHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const TableRow = styled.tr`
-  &:nth-child(even) {
-    background-color: #f7f8fc;
-  }
-`;
-
-const TableHeaderCell = styled.th`
-  text-align: left;
-  padding: 12px 8px;
-  font-size: 14px;
-  color: #2c3e50;
-  border-bottom: 1px solid #ddd;
-`;
-
-const TableCell = styled.td`
-  text-align: left;
-  padding: 12px 8px;
-  font-size: 14px;
-  color: #555;
-  border-bottom: 1px solid #ddd;
-`;
-
-const CalendarSection = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-top: 40px;
-  text-align: center;
-`;
-
-const CalendarHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-export default Dashboard;
+export default AdminDashboard;

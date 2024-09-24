@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import image1 from '../../Assest/bg1.jpg'; // Replace with the actual path to your images
-import image2 from '../../Assest/bg2.jpg';
+import image1 from '../../Assest/back.jpg'; // Replace with the actual path to your images
+import image2 from '../../Assest/new_bg.jpg';
 
 const Read = () => {
   const [currentImage, setCurrentImage] = useState(0);
