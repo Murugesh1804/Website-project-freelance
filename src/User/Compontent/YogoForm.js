@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 
 const YogoForm = () => {
   const { courseId } = useParams(); // Get courseId from URL
   const [questions, setQuestions] = useState([]);
   const [formData, setFormData] = useState({});
-
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,11 +16,11 @@ const YogoForm = () => {
         console.log('Full API response:', response);
 
         if (response && response.data && Array.isArray(response.data)) {
-          const formattedQuestions = response.data.map(question => ({
+          const formattedQuestions = response.data.map((question) => ({
             ...question,
             options: question.questionType === 'yes-no'
               ? ['Yes', 'No']
-              : question.options.map(option => option.value)
+              : question.options.map((option) => option.value),
           }));
           setQuestions(formattedQuestions);
         } else {
@@ -44,13 +42,14 @@ const YogoForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form data submitted:', formData);
-  
+
     const studentId = JSON.parse(localStorage.getItem('user'))?.studentId; // Get studentId from local storage
     const token = localStorage.getItem('token'); // Retrieve the authentication token
-  console.log("Student id:",studentId);
+    console.log("Student id:", studentId);
+
     const submissionData = {
       courseId,
       studentId, // Include studentId in the request body
@@ -61,22 +60,26 @@ const YogoForm = () => {
         options: question.options,
       })),
     };
-  
+
     console.log(submissionData);
-    Api.post(`/api/courses/${courseId}/submit-responses`, submissionData, {
-      headers: {
-      Authorization: `Bearer ${token}`
-      },
-    })
-      .then(response => {
-        alert('Responses submitted successfully!');
-        navigate('/UserPanel')
-      })
-      .catch(error => {
-        console.error('Error submitting responses:', error);
-      });
+
+    try {
+      const response = await Api.post(
+        `/api/courses/${courseId}/submit-responses`,
+        submissionData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert('Responses submitted successfully!');
+      navigate('/UserPanel');
+    } catch (error) {
+      console.error('Error submitting responses:', error);
+    }
   };
-  
 
   return (
     <FormWrapper>
@@ -90,36 +93,41 @@ const YogoForm = () => {
                 <Input
                   type="text"
                   onChange={(e) => handleInputChange(question._id, e.target.value)}
+                  placeholder="Enter your answer"
                 />
               )}
-              {question.questionType === 'yes-no' && question.options && question.options.map((option) => (
-                <div key={option}>
-                  <Input
-                    type="radio"
-                    name={question._id}
-                    value={option}
-                    onChange={() => handleInputChange(question._id, option)}
-                  />
-                  <label>{option}</label>
-                </div>
-              ))}
-              {question.questionType === 'checkbox' && question.options && question.options.map((option) => (
-                <div key={option}>
-                  <Input
-                    type="checkbox"
-                    value={option}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      const currentValues = formData[question._id] || [];
-                      const newValues = checked
-                        ? [...currentValues, option]
-                        : currentValues.filter(value => value !== option);
-                      handleInputChange(question._id, newValues);
-                    }}
-                  />
-                  <label>{option}</label>
-                </div>
-              ))}
+              {question.questionType === 'yes-no' &&
+                question.options &&
+                question.options.map((option) => (
+                  <OptionWrapper key={option}>
+                    <Input
+                      type="radio"
+                      name={question._id}
+                      value={option}
+                      onChange={() => handleInputChange(question._id, option)}
+                    />
+                    <label>{option}</label>
+                  </OptionWrapper>
+                ))}
+              {question.questionType === 'checkbox' &&
+                question.options &&
+                question.options.map((option) => (
+                  <OptionWrapper key={option}>
+                    <Input
+                      type="checkbox"
+                      value={option}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        const currentValues = formData[question._id] || [];
+                        const newValues = checked
+                          ? [...currentValues, option]
+                          : currentValues.filter((value) => value !== option);
+                        handleInputChange(question._id, newValues);
+                      }}
+                    />
+                    <label>{option}</label>
+                  </OptionWrapper>
+                ))}
             </QuestionWrapper>
           ))
         ) : (
@@ -131,7 +139,7 @@ const YogoForm = () => {
   );
 };
 
-// Styled-components remain unchanged
+// Styled-components
 const FormWrapper = styled.div`
   width: 100%;
   max-width: 600px;
@@ -139,6 +147,7 @@ const FormWrapper = styled.div`
   padding: 20px;
   background-color: #f7f7f7;
   border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const QuestionWrapper = styled.div`
@@ -148,6 +157,7 @@ const QuestionWrapper = styled.div`
 const Label = styled.label`
   font-size: 16px;
   font-weight: bold;
+  color: #333;
 `;
 
 const Input = styled.input`
@@ -155,6 +165,15 @@ const Input = styled.input`
   padding: 10px;
   margin-top: 10px;
   font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+`;
+
+const OptionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
 `;
 
 const SubmitButton = styled.button`
@@ -164,6 +183,7 @@ const SubmitButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 
   &:hover {
     background-color: #45a049;
