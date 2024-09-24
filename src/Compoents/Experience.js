@@ -41,7 +41,7 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  margin-top:60px;
+  margin:60px 0;
 `;
 
 const ImageSection = styled.div`
@@ -89,7 +89,7 @@ const Heading = styled.h1`
   margin-bottom: 10px;
   color: black;
   span {
-    color: blue;
+    color: #333;
   }
 
   @media (max-width: 1200px) {
@@ -110,7 +110,7 @@ const Subheading = styled.h2`
   margin-bottom: 10px;
   width: 100%;
   text-align: justify;
-  color: gray;
+  color: #000;
 
   @media (max-width: 768px) {
     font-size: 1.25rem;
@@ -167,7 +167,7 @@ const CountCard = styled.div`
 const CountNumber = styled.h3`
   font-size: 2rem;
   margin-bottom: 10px;
-  color: orange;
+  color: #333;
 
   @media (max-width: 768px) {
     font-size: 1.5rem;

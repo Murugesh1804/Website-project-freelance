@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
-import upBoxImage from '../../Assest/bg1.jpg';
-import course1 from '../../Assest/course-1.jpg';
+import { Book, Lock, Unlock, Award, ChevronRight } from 'lucide-react';
 
 const Stage = () => {
   const [purchasedCourses, setPurchasedCourses] = useState([]);
   const [unlockedCourses, setUnlockedCourses] = useState([]);
   const [courseDetails, setCourseDetails] = useState([]);
-  const navigate = useNavigate(); // Initialize navigate
+  const [activeStage, setActiveStage] = useState(null);
+  const navigate = useNavigate();
 
   const userId = JSON.parse(localStorage.getItem('user'))?.studentId;
 
@@ -41,215 +41,222 @@ const Stage = () => {
 
   const handlePayment = async (courseId) => {
     // Payment handling logic...
-
     // Assuming the payment verification is successful, navigate to YogoForm
     navigate(`/yogoform/${courseId}`);
   };
 
+  const getStageStatus = (courseId) => {
+    if (unlockedCourses.includes(courseId)) return 'unlocked';
+    const index = courseDetails.findIndex(course => course.courseId === courseId);
+    if (index === 0 || unlockedCourses.includes(courseDetails[index - 1].courseId)) return 'current';
+    return 'locked';
+  };
+
   return (
     <Container>
-      <Box>
-        <UpBox>
-          <UpBoxImage src={upBoxImage} alt="Up Box" />
-          <UpBoxContent>
-            <Title>Welcome to the Stage</Title>
-            <Description>
-              Unlock each stage by purchasing the course to progress towards your learning goals.
-            </Description>
-            <Button1>Start Learning</Button1>
-          </UpBoxContent>
-        </UpBox>
-
-        <DownBox>
-          {courseDetails.map((course) =>
-            renderStageCard(course.courseId, course.imageUrl, course.courseName, course.courseDescription)
-          )}
-        </DownBox>
-      </Box>
+      <Header>
+        <Title>Your Journey to Inner Peace</Title>
+        <Subtitle>Unlock each stage to progress on your path to mindfulness and self-discovery</Subtitle>
+      </Header>
+      <StagesContainer>
+        {courseDetails.map((course, index) => {
+          const status = getStageStatus(course.courseId);
+          return (
+            <StageCard
+              key={course.courseId}
+              onClick={() => setActiveStage(activeStage === course.courseId ? null : course.courseId)}
+              active={activeStage === course.courseId}
+              status={status}
+            >
+              <StageImage src={course.imageUrl || '/placeholder-image.jpg'} alt={course.courseName} />
+              <StageContent>
+                <StageHeader>
+                  <StageIcon status={status}>
+                    {status === 'unlocked' ? <Unlock /> : status === 'current' ? <Book /> : <Lock />}
+                  </StageIcon>
+                  <StageName>{course.courseName}</StageName>
+                </StageHeader>
+                <StageDescription>{course.courseDescription}</StageDescription>
+                {activeStage === course.courseId && (
+                  <StageDetails>
+                    <DetailText>{course.detailedDescription || "Embark on a journey of self-discovery and inner peace with this transformative course."}</DetailText>
+                    {status === 'unlocked' ? (
+                      <ActionButton onClick={() => navigate(`/yogoform/${course.courseId}`)}>
+                        Continue Your Journey <ChevronRight size={16} />
+                      </ActionButton>
+                    ) : status === 'current' ? (
+                      <ActionButton onClick={() => handlePayment(course.courseId)}>
+                        Unlock This Stage <Unlock size={16} />
+                      </ActionButton>
+                    ) : (
+                      <LockedMessage>Complete previous stages to unlock</LockedMessage>
+                    )}
+                  </StageDetails>
+                )}
+              </StageContent>
+            </StageCard>
+          );
+        })}
+      </StagesContainer>
+      <ProgressIndicator>
+        <ProgressText>Your Progress: {unlockedCourses.length} / {courseDetails.length} Stages Completed</ProgressText>
+        <ProgressBar width={(unlockedCourses.length / courseDetails.length) * 100} />
+      </ProgressIndicator>
     </Container>
   );
-
-  function renderStageCard(courseId, image, levelTitle, description) {
-    const isUnlocked = unlockedCourses.includes(courseId);
-
-    return (
-      <StageCard locked={!isUnlocked} key={courseId}>
-        <StageImage src={image || course1} alt={`Stage ${courseId}`} />
-        <StageContent>
-          <LevelTitle>{levelTitle}</LevelTitle>
-          <Description>{isUnlocked ? description : 'Purchase to unlock this course.'}</Description>
-          {isUnlocked ? (
-            <Button onClick={() => navigate(`/yogoform/${courseId}`)}>Start {levelTitle}</Button>
-          ) : (
-            <Button onClick={() => handlePayment(courseId)}>Buy {levelTitle}</Button>
-          )}
-        </StageContent>
-      </StageCard>
-    );
-  }
-}
-
-// Styled-components remain the same as in your provided code
+};
 
 const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-left: 50px;
-  padding-right: 50px;
-  background-color: #FEE3C1;
-  padding-bottom: 50px;
-  margin-top: 10px;
-`;
-
-const Box = styled.div`
-  width: 100%;
   max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f7f7f7;
+  min-height: 100vh;
 `;
 
-const UpBox = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 60px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    text-align: center;
-    margin-top: 10px;
-  }
+const Header = styled.header`
+  text-align: center;
+  margin-bottom: 2rem;
 `;
 
-const UpBoxImage = styled.img`
-  object-fit: cover;
-  height: 150px;
-  border-radius: 10px;
-  margin-right: 20px;
-
-  @media (max-width: 768px) {
-    margin-right: 0;
-    margin-bottom: 15px;
-  }
-`;
-
-const UpBoxContent = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Title = styled.h2`
-  margin: 0;
-  font-size: 1.8rem;
+const Title = styled.h1`
+  font-size: 2.5rem;
   color: #333;
-
-  @media (max-width: 480px) {
-    font-size: 1.4rem;
-  }
+  margin-bottom: 0.5rem;
 `;
 
-const Description = styled.p`
-  margin-top: 10px;
-  font-size: 1rem;
+const Subtitle = styled.p`
+  font-size: 1.1rem;
   color: #666;
-  text-align: justify;
-
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-  }
 `;
 
-const DownBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-  }
+const StagesContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 `;
 
 const StageCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  opacity: ${({ locked }) => (locked ? 0.6 : 1)};
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  ${({ active }) => active && `
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  `}
+
+  ${({ status }) => status === 'locked' && `
+    opacity: 0.7;
+  `}
 `;
 
 const StageImage = styled.img`
   width: 100%;
-  height: 150px;
+  height: 200px;
   object-fit: cover;
-  border-radius: 8px;
 `;
 
 const StageContent = styled.div`
-  margin-top: 10px;
-  text-align: center;
+  padding: 1.5rem;
 `;
 
-const LevelTitle = styled.h3`
+const StageHeader = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+`;
+
+const StageIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  color: white;
+  background-color: ${({ status }) => 
+    status === 'unlocked' ? '#28a745' : 
+    status === 'current' ? '#fda638' : 
+    '#6c757d'};
+`;
+
+const StageName = styled.h3`
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: #333;
 `;
 
-const Button = styled.button`
-  padding: 13px 35px;
-  margin-top: 10px;
-  font-family: poppins;
-  background-color: #28a745;
+const StageDescription = styled.p`
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1rem;
+`;
+
+const StageDetails = styled.div`
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+`;
+
+const DetailText = styled.p`
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 1rem;
+`;
+
+const ActionButton = styled.button`
+  background-color: #4a90e2;
   color: white;
   border: none;
-  border-radius: 30px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
 
   &:hover {
-    background-color: #218838;
+    background-color: #3a7bc8;
   }
 `;
 
-const Button1 = styled.button`
-  padding: 10px;
-  max-width: 10rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  background-color: #fda638;
-  border: none;
-  color: white;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+const LockedMessage = styled.p`
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-style: italic;
+`;
 
-  &:hover {
-    transform: scale(1.05);
-  }
+const ProgressIndicator = styled.div`
+  margin-top: 2rem;
+`;
 
-  @media (max-width: 768px) {
-    font-size: 1rem;
-    padding: 8px 16px;
-  }
+const ProgressText = styled.p`
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+`;
 
-  @media (max-width: 480px) {
-    font-size: 1.4rem;
-    padding: 10px 20px;
-    margin-left: 15%;
-    border-radius: 30px;
+const ProgressBar = styled.div`
+  height: 10px;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: ${props => props.width}%;
+    background-color: #28a745;
+    transition: width 0.5s ease;
   }
 `;
 

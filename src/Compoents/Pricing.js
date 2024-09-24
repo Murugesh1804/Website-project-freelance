@@ -1,185 +1,299 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import teacher1 from '../Assest/teacher1.jpg';
-import teacher2 from '../Assest/teacher2.jpg';
-import teacher3 from '../Assest/teacher3.jpg';
-import teacher4 from '../Assest/teacher4.jpg';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaCheck, FaTimes, FaInfoCircle } from 'react-icons/fa';
+
+const pricingData = [
+  {
+    title: "Basic Serenity",
+    price: 24.50,
+    features: [
+      "Daily meditation guidance",
+      "Basic stress relief techniques",
+      "Weekly group sessions",
+      "Access to beginner courses",
+      "Email support"
+    ],
+    color: "#4a90e2"
+  },
+  {
+    title: "Balanced Harmony",
+    price: 34.50,
+    features: [
+      "All Basic Serenity features",
+      "Personalized meditation plans",
+      "Advanced stress management",
+      "Bi-weekly one-on-one sessions",
+      "24/7 chat support"
+    ],
+    color: "#f39c12"
+  },
+  {
+    title: "Enlightened Journey",
+    price: 54.50,
+    features: [
+      "All Balanced Harmony features",
+      "Exclusive retreats access",
+      "Personal wellness coach",
+      "Custom course creation",
+      "Priority support"
+    ],
+    color: "#2ecc71"
+  },
+];
 
 const Pricing = () => {
-    return (
-        <Container id='pricing'>
-            <Title><span className='first'>Our </span> Pricing</Title>
-            <PriceGrid>
-                <PriceCard>
-                    <PriceTitle>Basic</PriceTitle>
-                    <PriceRate>$24.50</PriceRate>
-                    <PriceImage src={teacher1} alt='price 1' />
-                    <PriceDescription>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</PriceDescription>
-                    <PriceButton color="blue">Take a tour</PriceButton>
-                </PriceCard>
-                <PriceCard>
-                    <PriceTitle>Standard</PriceTitle>
-                    <PriceRate>$34.50</PriceRate>
-                    <PriceImage src={teacher2} alt='price 2' />
-                    <PriceDescription>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</PriceDescription>
-                    <PriceButton color="orange">Take a tour</PriceButton>
-                </PriceCard>
-                <PriceCard>
-                    <PriceTitle>Premium</PriceTitle>
-                    <PriceRate>$54.50</PriceRate>
-                    <PriceImage src={teacher3} alt='price 3' />
-                    <PriceDescription>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</PriceDescription>
-                    <PriceButton color="green">Take a tour</PriceButton>
-                </PriceCard>
-                <PriceCard>
-                    <PriceTitle>Platinum</PriceTitle>
-                    <PriceRate>$89.50</PriceRate>
-                    <PriceImage src={teacher4} alt='price 4' />
-                    <PriceDescription>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</PriceDescription>
-                    <PriceButton color="pink">Take a tour</PriceButton>
-                </PriceCard>
-            </PriceGrid>
-        </Container>
-    );
+  const [hoveredPlan, setHoveredPlan] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
+  return (
+    <Container>
+      <Title>
+        <motion.span
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Choose Your
+        </motion.span>{" "}
+        <motion.span
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          Path to Inner Peace
+        </motion.span>
+      </Title>
+      <Subtitle>Tailored plans to support your journey in the Art of Living</Subtitle>
+      
+      <PriceGrid>
+        {pricingData.map((plan, index) => (
+          <PriceCard
+            key={index}
+            onMouseEnter={() => setHoveredPlan(index)}
+            onMouseLeave={() => setHoveredPlan(null)}
+            onClick={() => setSelectedPlan(index)}
+            as={motion.div}
+            whileHover={{ scale: 1.05, boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.1)" }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <PlanTitle style={{ color: plan.color }}>{plan.title}</PlanTitle>
+            <PriceRate>₹{plan.price.toFixed(2)}<span>/month</span></PriceRate>
+            <FeatureList>
+              {plan.features.map((feature, idx) => (
+                <FeatureItem key={idx}>
+                  <FaCheck color={plan.color} /> {feature}
+                </FeatureItem>
+              ))}
+            </FeatureList>
+            <PriceButton
+              style={{ backgroundColor: plan.color }}
+              as={motion.button}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              Choose Plan
+            </PriceButton>
+            {hoveredPlan === index && (
+              <InfoIcon>
+                <FaInfoCircle />
+                <InfoTooltip>Click for more details</InfoTooltip>
+              </InfoIcon>
+            )}
+          </PriceCard>
+        ))}
+      </PriceGrid>
+
+      <AnimatePresence>
+        {selectedPlan !== null && (
+          <ModalOverlay
+            as={motion.div}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedPlan(null)}
+          >
+            <ModalContent
+              as={motion.div}
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ModalClose onClick={() => setSelectedPlan(null)}><FaTimes /></ModalClose>
+              <h2>{pricingData[selectedPlan].title}</h2>
+              <p>Embark on your journey to inner peace with our {pricingData[selectedPlan].title} plan. This comprehensive package is designed to support your growth and well-being through the Art of Living practices.</p>
+              <h3>What's Included:</h3>
+              <ul>
+                {pricingData[selectedPlan].features.map((feature, idx) => (
+                  <li key={idx}>{feature}</li>
+                ))}
+              </ul>
+              <p>Start your transformative journey today for just ${pricingData[selectedPlan].price.toFixed(2)}/month.</p>
+              <ModalButton style={{ backgroundColor: pricingData[selectedPlan].color }}>
+                Enroll Now
+              </ModalButton>
+            </ModalContent>
+          </ModalOverlay>
+        )}
+      </AnimatePresence>
+    </Container>
+  );
 };
 
 const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: transparent;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  margin-top:30px;
+  margin-bottom:30px;
 `;
 
 const Title = styled.h1`
   font-size: 2.5rem;
-  margin-bottom: 40px;
-  text-align: center;
-  color: orange;
+  color: #333;
+  margin-bottom: 1rem;
+`;
 
-  span {
-    color: blue;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1.5rem;
-  }
+const Subtitle = styled.p`
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
 `;
 
 const PriceGrid = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto; /* Center align the grid */
-
-    @media (max-width: 768px) {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 15px;
-    }
-
-    @media (max-width: 480px) {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
 `;
 
 const PriceCard = styled.div`
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
- 
-  border-radius: 8px;
-  padding: 20px;
-  background-color: #fff; /* Set background color for better contrast */
- 
-
-  @media (max-width: 768px) {
-    padding: 15px;
-  }
+  position: relative;
+  cursor: pointer;
 `;
 
-const PriceTitle = styled.h2`
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-
-    @media (max-width: 768px) {
-    font-size: 1.2rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 1rem;
-  }
+const PlanTitle = styled.h2`
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 `;
 
 const PriceRate = styled.div`
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: blue;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 
-    @media (max-width: 768px) {
-    font-size: 1.2rem;
-  }
-
-  @media (max-width: 480px) {
+  span {
     font-size: 1rem;
+    color: #666;
   }
 `;
 
-const PriceImage = styled.img`
-    width: 100%;
-    max-width: 150px;
-    height: auto;
-    object-fit: cover;
-    margin-bottom: 10px;
+const FeatureList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+`;
 
-  @media (max-width: 768px) {
-    max-width: 120px;
-  }
+const FeatureItem = styled.li`
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
 
-  @media (max-width: 480px) {
-    max-width: 100px;
+  svg {
+    margin-right: 0.5rem;
   }
 `;
 
-const PriceDescription = styled.div`
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 20px;
-    background-color: transparent;
+const PriceButton = styled.button`
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 `;
 
-const PriceButton = styled.div`
-    width: 130px;
-    height: 35px;
-    background-color: ${props => props.color || 'blue'};
-    color: white;
-    border-radius: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 0.9rem;
+const InfoIcon = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #666;
+  cursor: pointer;
+`;
 
-    @media (max-width: 768px) {
-        width: 120px;
-        height: 30px;
-        font-size: 0.8rem;
-    }
+const InfoTooltip = styled.span`
+  position: absolute;
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 
-    @media (max-width: 480px) {
-        width: 100px;
-        height: 25px;
-        font-size: 0.7rem;
-    }
+  ${InfoIcon}:hover & {
+    opacity: 1;
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+`;
+
+const ModalClose = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+`;
+
+const ModalButton = styled.button`
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
 `;
 
 export default Pricing;

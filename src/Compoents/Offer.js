@@ -85,7 +85,7 @@ const ArtOfLivingOffers = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <DetailImage src={offerData[selectedOffer].image} alt={offerData[selectedOffer].title} />
+            {/* <DetailImage src={offerData[selectedOffer].image} alt={offerData[selectedOffer].title} /> */}
             <DetailTitle>{offerData[selectedOffer].title}</DetailTitle>
             <DetailDescription>{offerData[selectedOffer].description}</DetailDescription>
           </motion.div>
@@ -151,16 +151,9 @@ const OfferTitle = styled.h3`
 
 const DetailSection = styled.div`
   margin-top: 2rem;
-  min-height: 300px;
+  min-height: 60px;
 `;
 
-const DetailImage = styled.img`
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-`;
 
 const DetailTitle = styled.h2`
   font-size: 1.8rem;
@@ -181,7 +174,7 @@ const CTAButton = styled(motion.button)`
   font-size: 1.2rem;
   border-radius: 30px;
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top:10px;
 `;
 
 export default ArtOfLivingOffers;

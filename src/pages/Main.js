@@ -4,8 +4,8 @@ import Home from '../Compoents/Home'
 // import Box from '../Compoents/Box'
 import Offer from '../Compoents/Offer'
 import TakeCourse from '../Compoents/TakeCourse'
-import Certified from '../Compoents/Certified'
-import Courses from '../Compoents/Courses'
+// import Certified from '../Compoents/Certified'
+import Levels from '../Compoents/Levels'
 import Experience from '../Compoents/Experience'
 import Footer from '../Compoents/Footer'
 import Pricing from '../Compoents/Pricing'
@@ -21,13 +21,14 @@ const Main = () => {
  <Nav/>
  <Home/>
  {/* <Box/> */}
- <Courses/>
+ <Levels/>
 
  <Offer/>
  <TakeCourse/>
- <Certified/>
- <Experience/>
+ {/* <Certified/> */}
  <Pricing/>
+ <Experience/>
+
  <Footer/>
  {/* <SignUp/>
  <Login/>
