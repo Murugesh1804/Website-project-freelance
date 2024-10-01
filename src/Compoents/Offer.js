@@ -12,38 +12,38 @@ import Emotional from '../Assest/bg4.jpg'; // New image for Emotional Intelligen
 const offerData = [
   {
     icon: <FaPrayingHands />,
-    title: "Meditation Techniques",
+    title: "Positive approach and Thinking",
     description: "Discover inner peace through our guided meditation sessions.",
     image: Med
   },
   {
     icon: <FaYinYang />,
-    title: "Yoga for Balance",
-    description: "Achieve mind-body harmony with our specialized yoga programs.",
+    title: "Stress Management",
+    description: "Learn effective techniques to reduce stress and anxiety.",
     image: Yoga
   },
   {
     icon: <FaHeartbeat />,
-    title: "Stress Management",
-    description: "Learn effective techniques to reduce stress and anxiety.",
+    title: "Family & Career Wellness",
+    description: "Enhance career development and foster positive relationships with family and society, both of which are essential aspects of life.",
     image: Stress
   },
   {
     icon: <FaBrain />,
-    title: "Mindfulness Practices",
-    description: "Enhance your awareness and live in the present moment.",
+    title: "Emotional Intelligence",
+    description: "Develop better understanding and control of your emotions.",
     image: Mindfulness
   },
   {
     icon: <FaLeaf />,
-    title: "Holistic Wellness",
-    description: "Explore natural ways to improve your overall well-being.",
+    title: "Yoga to unblock the Mental blocks",
+    description: "Achieve mind-body harmony with our specialized yoga programs.",
     image: Wellness
   },
   {
     icon: <FaSmile />,
-    title: "Emotional Intelligence",
-    description: "Develop better understanding and control of your emotions.",
+    title: "Ancient Yogic Meditation Techniques to reunite with Universe",
+    description: "",
     image: Emotional
   }
 ];
@@ -61,8 +61,8 @@ const ArtOfLivingOffers = () => {
 
   return (
     <Container>
-      <Title>Discover the Art of Living</Title>
-      <Subtitle>Embark on a journey to inner peace and self-discovery</Subtitle>
+      <Title>Experience the Mastery of Living</Title>
+      <Subtitle>Learn the Path to a Rich Life Experience</Subtitle>
       
       <OfferGrid>
         {offerData.map((offer, index) => (

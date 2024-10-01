@@ -10,8 +10,8 @@ const TakeCourse = () => {
         Your browser does not support the video tag.
       </BackgroundVideo>
       <Content>
-        <Text>Nurture your mind, nourish your soul.</Text>
-        <Button>Transform Your Mind</Button>
+        <Text>Discover WHO AM I?</Text>
+        <Button>By help of your mind</Button>
       </Content>
     </Container>
   );
