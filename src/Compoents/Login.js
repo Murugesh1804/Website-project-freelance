@@ -79,19 +79,6 @@ const Login = ({ onClose }) => {
           <LoginButton type="submit">Log in</LoginButton>
         </form>
 
-        <Divider><span>Or sign in with</span></Divider>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <SocialButton bgColor="#db4437">
-            <FaGoogle />
-            Google
-          </SocialButton>
-          <SocialButton bgColor="#3b5998">
-            <FaFacebook />
-            Facebook
-          </SocialButton>
-        </div>
-
         <SignupPrompt>
           Don't have an account? <Link to="/register">Sign Up</Link>
         </SignupPrompt>
