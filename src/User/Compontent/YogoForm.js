@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flower, Send, AlertCircle } from 'lucide-react';
+import styled from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 
 const YogoForm = () => {
@@ -12,6 +13,8 @@ const YogoForm = () => {
   const [loading, setLoading] = useState(true);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +40,11 @@ const YogoForm = () => {
         const response = await Api.get(`/api/courses/${courseId}/questions`);
         if (response && response.data && Array.isArray(response.data)) {
           setQuestions(response.data);
+          const formattedQuestions = response.data.map((question) => ({
+            ...question,
+            options: question.questionType === 'yes-no' ? ['Yes', 'No'] : question.options.map((option) => option.value),
+          }));
+          setQuestions(formattedQuestions);
         } else {
           console.error('API returned unexpected data format');
           setQuestions([]);
@@ -200,6 +208,54 @@ const YogoForm = () => {
               <NavButton onClick={nextQuestion} disabled={currentQuestionIndex === questions.length - 1}>Next</NavButton>
             )}
           </NavigationButtons>
+          {questions.length > 0 ? (
+            questions.map((question) => (
+              <QuestionWrapper key={question._id}>
+                <Label>{question.questionText}</Label>
+                {question.questionType === 'text' && (
+                  <Input
+                    type="text"
+                    onChange={(e) => handleInputChange(question._id, e.target.value)}
+                  />
+                )}
+                {question.questionType === 'yes-no' &&
+                  question.options &&
+                  question.options.map((option) => (
+                    <OptionWrapper key={option}>
+                      <Input
+                        type="radio"
+                        name={question._id}
+                        value={option}
+                        onChange={() => handleInputChange(question._id, option)}
+                      />
+                      <OptionLabel>{option}</OptionLabel>
+                    </OptionWrapper>
+                  ))}
+                {question.questionType === 'checkbox' &&
+                  question.options &&
+                  question.options.map((option) => (
+                    <OptionWrapper key={option}>
+                      <Input
+                        type="checkbox"
+                        value={option}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          const currentValues = formData[question._id] || [];
+                          const newValues = checked
+                            ? [...currentValues, option]
+                            : currentValues.filter((value) => value !== option);
+                          handleInputChange(question._id, newValues);
+                        }}
+                      />
+                      <OptionLabel>{option}</OptionLabel>
+                    </OptionWrapper>
+                  ))}
+              </QuestionWrapper>
+            ))
+          ) : (
+            <p>No questions available for this course.</p>
+          )}
+          <SubmitButton type="submit">Submit</SubmitButton>
         </form>
       </FormWrapper>
     </PageWrapper>
@@ -354,6 +410,20 @@ const NavButton = styled.button`
     background-color: #bdc3c7;
     cursor: not-allowed;
   }
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+`;
+
+const OptionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+`;
+
+const OptionLabel = styled.label`
+  font-size: 14px;
+  margin-left: 5px;
 `;
 
 const SubmitButton = styled.button`
