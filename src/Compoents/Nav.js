@@ -70,7 +70,6 @@ const Nav = ({ isLoggedIn }) => {
           <NavLinks>
             <NavLink href="#home" onClick={handleLinkClick}>Home</NavLink>
             <NavLink href="#about" onClick={handleLinkClick}>About</NavLink>
-            <NavLink href="#teacher" onClick={handleLinkClick}>Teacher</NavLink>
             <NavLink href="#courses" onClick={handleLinkClick}>Courses</NavLink>
             <NavLink href="#pricing" onClick={handleLinkClick}>Pricing</NavLink>
             {!isLoggedIn && (
@@ -98,7 +97,6 @@ const Nav = ({ isLoggedIn }) => {
         <SidebarContent>
           <SidebarLink href="#home" onClick={handleLinkClick}>Home</SidebarLink>
           <SidebarLink href="#about" onClick={handleLinkClick}>About</SidebarLink>
-          <SidebarLink href="#teacher" onClick={handleLinkClick}>Teacher</SidebarLink>
           <SidebarLink href="#courses" onClick={handleLinkClick}>Courses</SidebarLink>
           <SidebarLink href="#pricing" onClick={handleLinkClick}>Pricing</SidebarLink>
           {!isLoggedIn && (
