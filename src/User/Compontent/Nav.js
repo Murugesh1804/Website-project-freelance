@@ -71,7 +71,7 @@ const Nav = () => {
       <MainContent>
         <NavSection>
           <Logo>
-            <h2 href="#home" onClick={handleLinkClick}><span>Kiddos</span></h2>
+            <h2 href="#home" onClick={handleLinkClick}><span>Soul Stretch</span></h2>
           </Logo>
           <NavLinks>
             <NavLink href="#home" onClick={handleLinkClick}>Home</NavLink>
