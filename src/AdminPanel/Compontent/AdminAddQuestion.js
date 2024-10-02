@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Api from '../../Api/Api'; // Your API handler
+import { v4 as uuid } from 'uuid';
 
 const AdminAddQuestion = () => {
   const [courses, setCourses] = useState([]);
-  const [questions, setQuestions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState('');
-  const [questionText, setQuestionText] = useState('');
+  const [formQuestions, setFormQuestions] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const [editingQuestionId, setEditingQuestionId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false); // Track editing mode
 
   useEffect(() => {
     fetchCourses();
@@ -24,7 +26,7 @@ const AdminAddQuestion = () => {
       const { data } = await Api.get('/get-courses');
       setCourses(data);
       if (data.length > 0) {
-        setSelectedCourse(data[0].courseId); // Set initial course selection
+        setSelectedCourse(data[0].courseId);
       }
     } catch (error) {
       console.error('Failed to fetch courses', error);
@@ -40,41 +42,106 @@ const AdminAddQuestion = () => {
     }
   };
 
+  const addQuestion = () => {
+    setFormQuestions([
+      ...formQuestions,
+      {
+        id: uuid(),
+        questionText: '',
+        answerType: 'yes-no',
+        options: [
+          { optionText: 'Yes' },
+          { optionText: 'No' },
+        ],
+      },
+    ]);
+  };
+
+  const updateQuestionText = (index, text) => {
+    const updatedQuestions = [...formQuestions];
+    updatedQuestions[index].questionText = text;
+    setFormQuestions(updatedQuestions);
+  };
+
+  const updateAnswerType = (index, type) => {
+    const updatedQuestions = [...formQuestions];
+    updatedQuestions[index].answerType = type;
+
+    if (type === 'yes-no') {
+      updatedQuestions[index].options = [
+        { optionText: 'Yes' },
+        { optionText: 'No' },
+      ];
+    } else if (type === 'multiple-choice') {
+      updatedQuestions[index].options = [
+        { optionText: '' },
+        { optionText: '' },
+      ];
+    } else {
+      updatedQuestions[index].options = [];
+    }
+
+    setFormQuestions(updatedQuestions);
+  };
+
+  const updateOptionText = (questionIndex, optionIndex, text) => {
+    const updatedQuestions = [...formQuestions];
+    updatedQuestions[questionIndex].options[optionIndex].optionText = text;
+    setFormQuestions(updatedQuestions);
+  };
+
+  const addOption = (questionIndex) => {
+    const updatedQuestions = [...formQuestions];
+    updatedQuestions[questionIndex].options.push({ optionText: '' });
+    setFormQuestions(updatedQuestions);
+  };
+
+  const removeQuestion = (index) => {
+    const updatedQuestions = formQuestions.filter((_, i) => i !== index);
+    setFormQuestions(updatedQuestions);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const payload = {
         courseId: selectedCourse,
-        questionText,
-        questionType: 'yes-no',
-        options: [
-          { optionText: 'Yes' },
-          { optionText: 'No' },
-        ],
+        questions: formQuestions,
       };
 
-      if (editingQuestionId) {
-        await Api.put(`/api/edit-question/${editingQuestionId}`, payload);
+      if (isEditing && editingQuestionId) {
+        // If editing, update the existing question
+        await Api.put(`/api/edit-question/${editingQuestionId}`, payload.questions[0]);
         alert('Question updated successfully!');
       } else {
-        await Api.post('/api/add-question', payload);
-        alert('Question added successfully!');
+        // Add new question
+        await Api.post('/api/add-form', payload);
+        alert('Form added successfully!');
       }
 
       // Clear form and refresh questions
-      setQuestionText('');
+      setFormQuestions([]);
       setEditingQuestionId(null);
-      fetchQuestionsByCourse(selectedCourse); // Refresh questions for the current course
+      setIsEditing(false);
+      fetchQuestionsByCourse(selectedCourse);
     } catch (error) {
-      console.error('Error adding/updating question', error);
-      alert('Failed to process request. Please try again.');
+      console.error('Error adding/updating form:', error.message);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+      }
+      alert('Failed to process request. Please check the server connection.');
     }
   };
 
   const handleEdit = (question) => {
-    setSelectedCourse(question.courseId);
-    setQuestionText(question.questionText);
+    setFormQuestions([{
+      id: question._id,
+      questionText: question.questionText,
+      answerType: question.answerType,
+      options: question.options,
+    }]);
     setEditingQuestionId(question._id);
+    setIsEditing(true); // Set editing mode to true
   };
 
   const handleDelete = async (id) => {
@@ -82,28 +149,25 @@ const AdminAddQuestion = () => {
       try {
         await Api.delete(`/api/delete-question/${id}`);
         alert('Question deleted successfully!');
-        fetchQuestionsByCourse(selectedCourse); // Refresh questions for the current course
+        fetchQuestionsByCourse(selectedCourse);
       } catch (error) {
-        console.error('Error deleting question', error);
+        console.error('Error deleting question:', error);
         alert('Failed to delete question. Please try again.');
       }
     }
   };
 
-  // Logout function
   const handleLogout = () => {
-    // Clear local storage or authentication state
-    localStorage.removeItem('accessToken'); // Adjust the key as per your storage
-    localStorage.removeItem('user'); // Adjust as necessary
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
     alert('You have been logged out.');
-    // Optionally, redirect to login or homepage
-    window.location.href = '/login'; // Change the path as needed
+    window.location.href = '/login';
   };
 
   return (
     <Container>
-      <Title>Add/Edit Yes/No Question</Title>
-      <Button onClick={handleLogout}>Logout</Button> {/* Logout button */}
+      <Title>Create Question</Title>
+      <Button onClick={handleLogout}>Logout</Button>
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Course</Label>
@@ -121,16 +185,67 @@ const AdminAddQuestion = () => {
           </Select>
         </FormGroup>
 
-        <FormGroup>
-          <Label>Question Text</Label>
-          <TextArea
-            value={questionText}
-            onChange={(e) => setQuestionText(e.target.value)}
-            required
-          />
-        </FormGroup>
+        <FormQuestionsContainer>
+          {formQuestions.map((question, index) => (
+            <QuestionBlock key={question.id}>
+              <Label>Question {index + 1}</Label>
+              <TextArea
+                placeholder="Enter your question here"
+                value={question.questionText}
+                onChange={(e) => updateQuestionText(index, e.target.value)}
+                required
+              />
+              <FormGroup>
+                <Label>Answer Type</Label>
+                <Select
+                  value={question.answerType}
+                  onChange={(e) => updateAnswerType(index, e.target.value)}
+                >
+                  <option value="yes-no">Yes/No</option>
+                  <option value="short-text">Short Text</option>
+                  <option value="multiple-choice">Multiple Choice</option>
+                </Select>
+              </FormGroup>
 
-        <SubmitButton type="submit">{editingQuestionId ? 'Update Question' : 'Submit Question'}</SubmitButton>
+              {question.answerType === 'multiple-choice' && (
+                <OptionsContainer>
+                  <Label>Options</Label>
+                  {question.options.map((option, optIndex) => (
+                    <OptionInput
+                      key={optIndex}
+                      type="text"
+                      placeholder={`Option ${optIndex + 1}`}
+                      value={option.optionText}
+                      onChange={(e) =>
+                        updateOptionText(index, optIndex, e.target.value)
+                      }
+                      required
+                    />
+                  ))}
+                  <AddOptionButton
+                    type="button"
+                    onClick={() => addOption(index)}
+                  >
+                    + Add Option
+                  </AddOptionButton>
+                </OptionsContainer>
+              )}
+
+              {question.answerType === 'short-text' && (
+                <ShortTextInput type="text" disabled placeholder="Short Answer" />
+              )}
+
+              <RemoveButton onClick={() => removeQuestion(index)}>
+                Remove Question
+              </RemoveButton>
+            </QuestionBlock>
+          ))}
+        </FormQuestionsContainer>
+
+        <AddQuestionButton type="button" onClick={addQuestion}>
+          + Add Question
+        </AddQuestionButton>
+        <SubmitButton type="submit">{isEditing ? 'Update Question' : 'Submit Form'}</SubmitButton>
       </Form>
 
       <QuestionsList>
@@ -149,9 +264,9 @@ const AdminAddQuestion = () => {
   );
 };
 
-// Styled components remain unchanged
+// Styled Components
 const Container = styled.div`
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f9f9f9;
@@ -170,7 +285,7 @@ const Form = styled.form`
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 `;
 
 const Label = styled.label`
@@ -185,12 +300,86 @@ const Select = styled.select`
   border-radius: 4px;
 `;
 
+const FormQuestionsContainer = styled.div`
+  margin-top: 20px;
+`;
+
+const QuestionBlock = styled.div`
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  border-radius: 4px;
+  background-color: #fff;
+`;
+
 const TextArea = styled.textarea`
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   resize: vertical;
+`;
+
+const OptionsContainer = styled.div`
+  margin-top: 10px;
+`;
+
+const OptionInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const ShortTextInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const AddOptionButton = styled.button`
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 5px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const AddQuestionButton = styled.button`
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const RemoveButton = styled.button`
+  margin-top: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #c82333;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -207,8 +396,27 @@ const SubmitButton = styled.button`
   }
 `;
 
+const Button = styled.button`
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  &:hover {
+    background-color: #c82333;
+  }
+`;
+
+// Missing Styled Components for Question List Section
 const QuestionsList = styled.div`
-  margin-top: 20px;
+  margin-top: 40px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 `;
 
 const QuestionItem = styled.div`
@@ -251,20 +459,6 @@ const DeleteButton = styled.button`
   border-radius: 4px;
   padding: 5px 10px;
   cursor: pointer;
-
-  &:hover {
-    background-color: #c82333;
-  }
-`;
-
-const Button = styled.button`
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 10px;
-  cursor: pointer;
-  margin-bottom: 20px;
 
   &:hover {
     background-color: #c82333;

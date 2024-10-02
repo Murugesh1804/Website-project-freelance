@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Flower } from 'lucide-react';
 import Api from '../../Api/Api';
 
@@ -8,8 +8,7 @@ const MindfulnessProgress = () => {
     const [activeStage, setActiveStage] = useState(1);
     const [showTip, setShowTip] = useState(false);
     const [purchasedCourses, setPurchasedCourses] = useState([]);
-    const [stageData, setStageData] = useState([]);
-    const [responseData, setResponseData] = useState({ responses: [] });
+    const [responseData, setResponseData] = useState([]);
     const userId = JSON.parse(localStorage.getItem('user'))?.studentId;
 
     useEffect(() => {
@@ -28,10 +27,9 @@ const MindfulnessProgress = () => {
 
     const fetchResponses = async (courseId) => {
         try {
-            const { data } = await Api.get(`/responses/course/${courseId}/${userId}`);
+            const { data } = await Api.get(`/responses/analytics/${courseId}`);
             console.log('Fetched responses:', data);
-            setResponseData(data);
-            setStageData(data.responses); // Use the responses directly for the graph
+            setResponseData(data.questions); // Use the questions for the graph
         } catch (error) {
             console.error('Failed to fetch responses', error);
         }
@@ -75,13 +73,19 @@ const MindfulnessProgress = () => {
                     <CardTitle>Response Metrics</CardTitle>
                     <ChartContainer>
                         <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={stageData}>
+                            <LineChart data={responseData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="questionText" />
                                 <YAxis />
                                 <Tooltip />
-                                <Line type="monotone" dataKey="yesCount" stroke="#82ca9d" activeDot={{ r: 8 }} name="Yes" />
-                                <Line type="monotone" dataKey="noCount" stroke="#8884d8" activeDot={{ r: 8 }} name="No" />
+                                <Legend />
+                                <Line type="monotone" dataKey="yesCount" stroke="#82ca9d" activeDot={{ r: 8 }} name="Yes Count" />
+                                <Line type="monotone" dataKey="noCount" stroke="#8884d8" activeDot={{ r: 8 }} name="No Count" />
+                                {/* Display options count for multiple-choice questions if available */}
+                                {responseData.length > 0 && responseData[0].options &&
+                                  Object.keys(responseData[0].options).map((option, index) => (
+                                    <Line key={index} type="monotone" dataKey={`options.${option}`} stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} name={option} />
+                                ))}
                             </LineChart>
                         </ResponsiveContainer>
                     </ChartContainer>
@@ -100,13 +104,11 @@ const MindfulnessProgress = () => {
                     </CustomAlert>
                 )}
             </div>
-
-           
         </Container>
     );
 };
 
-// Styled components (same as before)
+// Styled components
 const Container = styled.div`
   background: linear-gradient(to bottom right, #e0e7ff, #e5e1f9);
   padding: 1.5rem;
@@ -211,17 +213,6 @@ const CustomAlert = styled.div`
 const AlertTitle = styled.h3`
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
-`;
-
-const QuestionsContainer = styled.div`
-  margin-top: 1.5rem;
-`;
-
-const QuestionItem = styled.div`
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background: #e0f2fe;
-  border-radius: 0.375rem;
 `;
 
 export default MindfulnessProgress;

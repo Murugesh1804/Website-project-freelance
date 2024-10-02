@@ -11,18 +11,19 @@ const YogoForm = () => {
   const [loading, setLoading] = useState(true); // Loading state
 
   const navigate = useNavigate();
+
   useEffect(() => {
     const checkSubmissionStatus = async () => {
       try {
         const studentId = JSON.parse(localStorage.getItem('user'))?.studentId; // Get studentId from local storage
-  
-        // Change to a POST request to pass studentId in the body
+
+        // Check if the student has already submitted responses
         const submissionStatusResponse = await Api.post(`/api/courses/${courseId}/has-submitted`, { studentId });
-  
+
         if (submissionStatusResponse.data.hasSubmitted) {
           setHasSubmitted(true); // User has already submitted
         } else {
-          fetchQuestions(); // If not submitted, fetch questions
+          await fetchQuestions(); // If not submitted, fetch questions
         }
       } catch (error) {
         console.error('Error checking submission status:', error);
@@ -30,18 +31,13 @@ const YogoForm = () => {
         setLoading(false); // Stop loading after check
       }
     };
-  
+
     const fetchQuestions = async () => {
       try {
         const response = await Api.get(`/api/courses/${courseId}/questions`);
+        console.log('Questions received:', response.data); // Debugging: Check if questions have `questionType`
         if (response && response.data && Array.isArray(response.data)) {
-          const formattedQuestions = response.data.map(question => ({
-            ...question,
-            options: question.questionType === 'yes-no'
-              ? ['Yes', 'No']
-              : question.options.map(option => option.value),
-          }));
-          setQuestions(formattedQuestions);
+          setQuestions(response.data);
         } else {
           console.error('API returned unexpected data format');
           setQuestions([]);
@@ -51,10 +47,10 @@ const YogoForm = () => {
         setQuestions([]);
       }
     };
-  
+
     checkSubmissionStatus();
   }, [courseId]);
-  
+
   const handleInputChange = (questionId, value) => {
     setFormData({
       ...formData,
@@ -68,12 +64,13 @@ const YogoForm = () => {
   
     const studentId = JSON.parse(localStorage.getItem('user'))?.studentId; // Get studentId from local storage
     const token = localStorage.getItem('token'); // Retrieve the authentication token
-
+  
     const submissionData = {
       courseId,
       studentId, // Include studentId in the request body
       responses: questions.map((question) => ({
         questionId: question._id,
+        answerType: question.answerType, // Include answerType in the response
         answer: formData[question._id],
         questionText: question.questionText,
         options: question.options,
@@ -92,6 +89,7 @@ const YogoForm = () => {
       console.error('Error submitting responses:', error);
     }
   };
+  
 
   if (loading) {
     return <p>Loading...</p>;
@@ -108,40 +106,49 @@ const YogoForm = () => {
             questions.map((question) => (
               <QuestionWrapper key={question._id}>
                 <Label>{question.questionText}</Label>
-                {question.questionType === 'text' && (
+                {question.answerType === 'short-text' && (
                   <Input
                     type="text"
+                    placeholder="Enter your answer here"
                     onChange={(e) => handleInputChange(question._id, e.target.value)}
                   />
                 )}
-                {question.questionType === 'yes-no' && question.options && question.options.map((option) => (
-                  <div key={option}>
-                    <Input
-                      type="radio"
-                      name={question._id}
-                      value={option}
-                      onChange={() => handleInputChange(question._id, option)}
-                    />
-                    <label>{option}</label>
-                  </div>
-                ))}
-                {question.questionType === 'checkbox' && question.options && question.options.map((option) => (
-                  <div key={option}>
-                    <Input
-                      type="checkbox"
-                      value={option}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        const currentValues = formData[question._id] || [];
-                        const newValues = checked
-                          ? [...currentValues, option]
-                          : currentValues.filter(value => value !== option);
-                        handleInputChange(question._id, newValues);
-                      }}
-                    />
-                    <label>{option}</label>
-                  </div>
-                ))}
+                {question.answerType === 'yes-no' && question.options && (
+                  <OptionsWrapper>
+                    {question.options.map((option) => (
+                      <OptionWrapper key={option._id}>
+                        <Input
+                          type="radio"
+                          name={question._id}
+                          value={option.optionText}
+                          onChange={() => handleInputChange(question._id, option.optionText)}
+                        />
+                        <OptionLabel>{option.optionText}</OptionLabel>
+                      </OptionWrapper>
+                    ))}
+                  </OptionsWrapper>
+                )}
+                {question.answerType === 'multiple-choice' && question.options && (
+                  <OptionsWrapper>
+                    {question.options.map((option) => (
+                      <OptionWrapper key={option._id}>
+                        <Input
+                          type="checkbox"
+                          value={option.optionText}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            const currentValues = formData[question._id] || [];
+                            const newValues = checked
+                              ? [...currentValues, option.optionText]
+                              : currentValues.filter(value => value !== option.optionText);
+                            handleInputChange(question._id, newValues);
+                          }}
+                        />
+                        <OptionLabel>{option.optionText}</OptionLabel>
+                      </OptionWrapper>
+                    ))}
+                  </OptionsWrapper>
+                )}
               </QuestionWrapper>
             ))
           ) : (
@@ -154,7 +161,7 @@ const YogoForm = () => {
   );
 };
 
-// Styled-components remain unchanged
+// Styled-components
 const FormWrapper = styled.div`
   width: 100%;
   max-width: 600px;
@@ -171,13 +178,28 @@ const QuestionWrapper = styled.div`
 const Label = styled.label`
   font-size: 16px;
   font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
 `;
 
 const Input = styled.input`
-  width: 100%;
   padding: 10px;
   margin-top: 10px;
+  margin-right: 10px;
   font-size: 14px;
+`;
+
+const OptionsWrapper = styled.div`
+  margin-top: 10px;
+`;
+
+const OptionWrapper = styled.div`
+  margin-bottom: 10px;
+`;
+
+const OptionLabel = styled.label`
+  font-size: 14px;
+  margin-left: 5px;
 `;
 
 const SubmitButton = styled.button`
@@ -187,6 +209,7 @@ const SubmitButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 20px;
 
   &:hover {
     background-color: #45a049;
