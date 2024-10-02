@@ -142,15 +142,15 @@ const Footer = () => {
           <h3>Have a Question?</h3>
           <ContactInfo>
             <FaMapMarkerAlt />
-            <p>123 Main Street, City, Country</p>
+            <p>Yoganetra Foundation, Chennai</p>
           </ContactInfo>
           <ContactInfo>
             <FaPhoneAlt />
-            <p>+123 456 7890</p>
+            <p>+91 1800 260 1234</p>
           </ContactInfo>
           <ContactInfo>
             <FaEnvelope />
-            <p>info@example.com</p>
+            <p>info@yoganetra.com</p>
           </ContactInfo>
         </Card>
 
@@ -159,15 +159,15 @@ const Footer = () => {
           <BlogItem>
             <img src={teacher1} alt="Blog 1" />
             <div>
-              <a href="#blog1">How to Improve Your Coding Skills</a>
-              <p>Learn tips and tricks to enhance your coding abilities.</p>
+              <a href="#blog1">How to Improve Your Positivity</a>
+              <p>Learn tips and tricks to enhance your positivity in everything you do.</p>
             </div>
           </BlogItem>
           <BlogItem>
             <img src={teacher2} alt="Blog 2" />
             <div>
-              <a href="#blog2">Top 10 JavaScript Libraries in 2024</a>
-              <p>Discover the most popular JavaScript libraries this year.</p>
+              <a href="#blog2">Benefits of Auto Suggestion</a>
+              <p>Reprogram your subconscious mind through auto suggestion.</p>
             </div>
           </BlogItem>
         </Card>

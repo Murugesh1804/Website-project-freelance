@@ -5,37 +5,59 @@ import { FaCheck, FaTimes, FaInfoCircle } from 'react-icons/fa';
 
 const pricingData = [
   {
-    title: "Basic Serenity",
-    price: 24.50,
+    title: "Intro Session",
+    price: 99,
     features: [
-      "Daily meditation guidance",
-      "Basic stress relief techniques",
-      "Weekly group sessions",
-      "Access to beginner courses",
-      "Email support"
+      "Common Survey",
+      "Listing out problems",
+      "Dimension of Life",
+      "Understanding blocks",
+      "Understanding Peace",
+      "Process of Transformation",
+      "Access to Questionaire",
+      "Tips to start"
     ],
     color: "#4a90e2"
   },
   {
-    title: "Balanced Harmony",
-    price: 34.50,
+    title: "Ready for Change",
+    price: 999,
     features: [
-      "All Basic Serenity features",
-      "Personalized meditation plans",
+      "Reset Positive approach",
+      "Reset Positive Thinking",
+      "Understanding Body & Mind",
+      "Stress Management",
+      "Family & Career Wellness",
+      "Daily Positive Framework",
+      "Understanding Goal and Destiny",
+      "Access to Questionaire",
+      "Monitor your progress path"
+    ],
+    color: "#4a90e2"
+  },
+  {
+    title: "Mind Voyage",
+    price: 3450,
+    features: [
+      "Understanding states of mind",
+      "Yogic Meditation Techniques",
+      "Understanding Mind & Energy",
+      "Resetting Goals, Ego, Thoughts",
+      "Tuning the Mind",
       "Advanced stress management",
-      "Bi-weekly one-on-one sessions",
-      "24/7 chat support"
+      "Bi-weekly sessions"
     ],
     color: "#f39c12"
   },
   {
-    title: "Enlightened Journey",
-    price: 54.50,
+    title: "Grand Awaken",
+    price: 3550,
     features: [
-      "All Balanced Harmony features",
-      "Exclusive retreats access",
+      "Advanced Meditation Techniques",
+      "Techniques to increase energy",
+      "Understanding Mind & Universe",
       "Personal wellness coach",
-      "Custom course creation",
+      "Follow up mechanisms",
       "Priority support"
     ],
     color: "#2ecc71"
@@ -61,10 +83,10 @@ const Pricing = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Path to Inner Peace
+          Path for the Change
         </motion.span>
       </Title>
-      <Subtitle>Tailored plans to support your journey in the Art of Living</Subtitle>
+      <Subtitle>Tailored plans to support your journey in the Art of Celebrating Life</Subtitle>
       
       <PriceGrid>
         {pricingData.map((plan, index) => (
@@ -78,7 +100,7 @@ const Pricing = () => {
             whileTap={{ scale: 0.95 }}
           >
             <PlanTitle style={{ color: plan.color }}>{plan.title}</PlanTitle>
-            <PriceRate>₹{plan.price.toFixed(2)}<span>/month</span></PriceRate>
+            <PriceRate>₹{plan.price.toFixed(0)}<span></span></PriceRate>   
             <FeatureList>
               {plan.features.map((feature, idx) => (
                 <FeatureItem key={idx}>
@@ -122,14 +144,14 @@ const Pricing = () => {
             >
               <ModalClose onClick={() => setSelectedPlan(null)}><FaTimes /></ModalClose>
               <h2>{pricingData[selectedPlan].title}</h2>
-              <p>Embark on your journey to inner peace with our {pricingData[selectedPlan].title} plan. This comprehensive package is designed to support your growth and well-being through the Art of Living practices.</p>
+              <p>Embark on your journey to inner peace with our {pricingData[selectedPlan].title} plan. This comprehensive package is designed to support your growth and well-being through the Art of Celebrating Life practices.</p>
               <h3>What's Included:</h3>
               <ul>
                 {pricingData[selectedPlan].features.map((feature, idx) => (
                   <li key={idx}>{feature}</li>
                 ))}
               </ul>
-              <p>Start your transformative journey today for just ${pricingData[selectedPlan].price.toFixed(2)}/month.</p>
+              <p>Start your transformative journey today for just ${pricingData[selectedPlan].price.toFixed(2)}/Course.</p>
               <ModalButton style={{ backgroundColor: pricingData[selectedPlan].color }}>
                 Enroll Now
               </ModalButton>

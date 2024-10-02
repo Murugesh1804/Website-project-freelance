@@ -3,18 +3,19 @@ import styled from 'styled-components';
 import backgroundImage from '../Assest/bg.png';
 
 const Home = () => {
-  const [currentText, setCurrentText] = useState("Perfect Learning For Your Child");
+  const [currentText, setCurrentText] = useState("Bring the change in you");
 
   useEffect(() => {
     const texts = [
-      "Peace begins with a single breath.",
-      "Embark on a journey to lasting tranquility."
+      "Bring the change in you",
+      "For a focussed mind and to stay balanced",
+      "No extra time required. Simply excel at what you do by using a different approach."
     ];
     let index = 0;
     const interval = setInterval(() => {
       index = (index + 1) % texts.length;
       setCurrentText(texts[index]);
-    }, 3000); 
+    }, 5000); 
 
     return () => clearInterval(interval); 
   }, []);

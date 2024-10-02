@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 
 const YogoForm = () => {
   const { courseId } = useParams(); // Get courseId from URL
   const [questions, setQuestions] = useState([]);
   const [formData, setFormData] = useState({});
-  const [hasSubmitted, setHasSubmitted] = useState(false); // State to track submission
-  const [loading, setLoading] = useState(true); // Loading state
+
 
   const navigate = useNavigate();
 
@@ -37,7 +36,13 @@ const YogoForm = () => {
         const response = await Api.get(`/api/courses/${courseId}/questions`);
         console.log('Questions received:', response.data); // Debugging: Check if questions have `questionType`
         if (response && response.data && Array.isArray(response.data)) {
-          setQuestions(response.data);
+          const formattedQuestions = response.data.map(question => ({
+            ...question,
+            options: question.questionType === 'yes-no'
+              ? ['Yes', 'No']
+              : question.options.map(option => option.value),
+          }));
+          setQuestions(formattedQuestions);
         } else {
           console.error('API returned unexpected data format');
           setQuestions([]);
@@ -61,10 +66,10 @@ const YogoForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form data submitted:', formData);
-  
+
     const studentId = JSON.parse(localStorage.getItem('user'))?.studentId; // Get studentId from local storage
     const token = localStorage.getItem('token'); // Retrieve the authentication token
-  
+
     const submissionData = {
       courseId,
       studentId, // Include studentId in the request body
@@ -89,7 +94,6 @@ const YogoForm = () => {
       console.error('Error submitting responses:', error);
     }
   };
-  
 
   if (loading) {
     return <p>Loading...</p>;
@@ -106,49 +110,40 @@ const YogoForm = () => {
             questions.map((question) => (
               <QuestionWrapper key={question._id}>
                 <Label>{question.questionText}</Label>
-                {question.answerType === 'short-text' && (
+                {question.questionType === 'text' && (
                   <Input
                     type="text"
-                    placeholder="Enter your answer here"
                     onChange={(e) => handleInputChange(question._id, e.target.value)}
                   />
                 )}
-                {question.answerType === 'yes-no' && question.options && (
-                  <OptionsWrapper>
-                    {question.options.map((option) => (
-                      <OptionWrapper key={option._id}>
-                        <Input
-                          type="radio"
-                          name={question._id}
-                          value={option.optionText}
-                          onChange={() => handleInputChange(question._id, option.optionText)}
-                        />
-                        <OptionLabel>{option.optionText}</OptionLabel>
-                      </OptionWrapper>
-                    ))}
-                  </OptionsWrapper>
-                )}
-                {question.answerType === 'multiple-choice' && question.options && (
-                  <OptionsWrapper>
-                    {question.options.map((option) => (
-                      <OptionWrapper key={option._id}>
-                        <Input
-                          type="checkbox"
-                          value={option.optionText}
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            const currentValues = formData[question._id] || [];
-                            const newValues = checked
-                              ? [...currentValues, option.optionText]
-                              : currentValues.filter(value => value !== option.optionText);
-                            handleInputChange(question._id, newValues);
-                          }}
-                        />
-                        <OptionLabel>{option.optionText}</OptionLabel>
-                      </OptionWrapper>
-                    ))}
-                  </OptionsWrapper>
-                )}
+                {question.questionType === 'yes-no' && question.options && question.options.map((option) => (
+                  <div key={option}>
+                    <Input
+                      type="radio"
+                      name={question._id}
+                      value={option}
+                      onChange={() => handleInputChange(question._id, option)}
+                    />
+                    <label>{option}</label>
+                  </div>
+                ))}
+                {question.questionType === 'checkbox' && question.options && question.options.map((option) => (
+                  <div key={option}>
+                    <Input
+                      type="checkbox"
+                      value={option}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        const currentValues = formData[question._id] || [];
+                        const newValues = checked
+                          ? [...currentValues, option]
+                          : currentValues.filter(value => value !== option);
+                        handleInputChange(question._id, newValues);
+                      }}
+                    />
+                    <label>{option}</label>
+                  </div>
+                ))}
               </QuestionWrapper>
             ))
           ) : (
@@ -169,6 +164,7 @@ const FormWrapper = styled.div`
   padding: 20px;
   background-color: #f7f7f7;
   border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const QuestionWrapper = styled.div`
@@ -178,8 +174,6 @@ const QuestionWrapper = styled.div`
 const Label = styled.label`
   font-size: 16px;
   font-weight: bold;
-  display: block;
-  margin-bottom: 10px;
 `;
 
 const Input = styled.input`
@@ -187,6 +181,15 @@ const Input = styled.input`
   margin-top: 10px;
   margin-right: 10px;
   font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+`;
+
+const OptionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
 `;
 
 const OptionsWrapper = styled.div`
@@ -209,7 +212,6 @@ const SubmitButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
 
   &:hover {
     background-color: #45a049;
