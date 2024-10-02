@@ -23,16 +23,35 @@ const AdminAddQuestion = () => {
 
   const fetchCourses = async () => {
     try {
-      const { data } = await Api.get('/get-courses');
-      setCourses(data);
+      const { data } = await Api.get('/course/get-courses');
+      
+      // Log data to verify the response structure
+      console.log("Courses fetched:", data);
+
+      // Handle different possible response formats
+      if (Array.isArray(data)) {
+        // If data is already an array
+        setCourses(data);
+      } else if (data.courses && Array.isArray(data.courses)) {
+        // If data is wrapped inside a "courses" property
+        setCourses(data.courses);
+      } else {
+        console.error("Unexpected response format, expected an array");
+        setCourses([]);
+      }
+
+      // Automatically select the first course if any
       if (data.length > 0) {
         setSelectedCourse(data[0].courseId);
+      } else if (data.courses && data.courses.length > 0) {
+        setSelectedCourse(data.courses[0].courseId);
       }
+      
     } catch (error) {
       console.error('Failed to fetch courses', error);
+      setCourses([]); // In case of an error, set courses to an empty array
     }
   };
-
   const fetchQuestionsByCourse = async (courseId) => {
     try {
       const { data } = await Api.get(`/api/questions/course/${courseId}`);
@@ -157,32 +176,29 @@ const AdminAddQuestion = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
-    alert('You have been logged out.');
-    window.location.href = '/login';
-  };
-
   return (
     <Container>
       <Title>Create Question</Title>
-      <Button onClick={handleLogout}>Logout</Button>
+      
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Course</Label>
-          <Select
-            value={selectedCourse}
-            onChange={(e) => setSelectedCourse(e.target.value)}
-            required
-          >
-            <option value="">Select Course</option>
-            {courses.map((course) => (
-              <option key={course._id} value={course.courseId}>
-                {course.courseName}
-              </option>
-            ))}
-          </Select>
+          {Array.isArray(courses) && courses.length > 0 ? (
+            <Select
+              value={selectedCourse}
+              onChange={(e) => setSelectedCourse(e.target.value)}
+              required
+            >
+              <option value="">Select Course</option>
+              {courses.map((course) => (
+                <option key={course._id} value={course.courseId}>
+                  {course.courseName}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <p>No courses available</p>
+          )}
         </FormGroup>
 
         <FormQuestionsContainer>
@@ -263,7 +279,6 @@ const AdminAddQuestion = () => {
     </Container>
   );
 };
-
 // Styled Components
 const Container = styled.div`
   max-width: 800px;
@@ -272,6 +287,8 @@ const Container = styled.div`
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: scroll;
+  max-height: 600px;
 `;
 
 const Title = styled.h2`

@@ -9,11 +9,6 @@ import Levels from '../Compoents/Levels'
 import Experience from '../Compoents/Experience'
 import Footer from '../Compoents/Footer'
 import Pricing from '../Compoents/Pricing'
-import SignUp from '../Compoents/SignUp'
-import Login from '../Compoents/Login'
-import Dashboard from '../Compoents/Dashboard'
-
-
 
 const Main = () => {
   return (

@@ -80,7 +80,7 @@ const Login = ({ onClose }) => {
         </form>
 
         <SignupPrompt>
-          Don't have an account? <Link to="/register">Sign Up</Link>
+         Are You admin <Link to="/adminlogin">Admin</Link>
         </SignupPrompt>
       </PopupContainer>
     </Overlay>

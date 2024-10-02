@@ -9,6 +9,7 @@ const MindfulnessProgress = () => {
     const [showTip, setShowTip] = useState(false);
     const [purchasedCourses, setPurchasedCourses] = useState([]);
     const [responseData, setResponseData] = useState([]);
+    const [error, setError] = useState(null);
     const userId = JSON.parse(localStorage.getItem('user'))?.studentId;
 
     useEffect(() => {
@@ -26,14 +27,23 @@ const MindfulnessProgress = () => {
     };
 
     const fetchResponses = async (courseId) => {
-        try {
-            const { data } = await Api.get(`/responses/analytics/${courseId}`);
-            console.log('Fetched responses:', data);
-            setResponseData(data.questions); // Use the questions for the graph
-        } catch (error) {
-            console.error('Failed to fetch responses', error);
-        }
-    };
+      try {
+          const studentId = JSON.parse(localStorage.getItem('user'))?.studentId;
+          const { data } = await Api.get(`response/analytics/${courseId}/${studentId}`);
+          console.log('Fetched responses:', data);
+          if (data && data.questions) {
+              setResponseData(data.questions);
+          } else {
+              setResponseData([]);
+          }
+          setError(null);
+      } catch (error) {
+          console.error('Failed to fetch responses', error);
+          setResponseData([]); // Set empty data if there's an error
+          setError('No response data available for this course.');
+      }
+  };
+  
 
     const handleStageClick = (index) => {
         setActiveStage(index + 1);
@@ -71,24 +81,28 @@ const MindfulnessProgress = () => {
 
                 <Card>
                     <CardTitle>Response Metrics</CardTitle>
-                    <ChartContainer>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={responseData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="questionText" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line type="monotone" dataKey="yesCount" stroke="#82ca9d" activeDot={{ r: 8 }} name="Yes Count" />
-                                <Line type="monotone" dataKey="noCount" stroke="#8884d8" activeDot={{ r: 8 }} name="No Count" />
-                                {/* Display options count for multiple-choice questions if available */}
-                                {responseData.length > 0 && responseData[0].options &&
-                                  Object.keys(responseData[0].options).map((option, index) => (
-                                    <Line key={index} type="monotone" dataKey={`options.${option}`} stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} name={option} />
-                                ))}
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </ChartContainer>
+                    {error ? (
+                        <ErrorMessage>{error}</ErrorMessage>
+                    ) : (
+                        <ChartContainer>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={responseData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="questionText" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Line type="monotone" dataKey="yesCount" stroke="#82ca9d" activeDot={{ r: 8 }} name="Yes Count" />
+                                    <Line type="monotone" dataKey="noCount" stroke="#8884d8" activeDot={{ r: 8 }} name="No Count" />
+                                    {/* Display options count for multiple-choice questions if available */}
+                                    {responseData.length > 0 && responseData[0].options &&
+                                      Object.keys(responseData[0].options).map((option, index) => (
+                                        <Line key={index} type="monotone" dataKey={`options.${option}`} stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} name={option} />
+                                    ))}
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </ChartContainer>
+                    )}
                 </Card>
             </GridContainer>
 
@@ -213,6 +227,11 @@ const CustomAlert = styled.div`
 const AlertTitle = styled.h3`
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
+`;
+
+const ErrorMessage = styled.p`
+  color: #dc2626;
+  text-align: center;
 `;
 
 export default MindfulnessProgress;
