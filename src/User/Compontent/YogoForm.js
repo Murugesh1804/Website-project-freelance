@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import styled, { css, keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 
 const YogoForm = () => {
   const { courseId } = useParams(); // Get courseId from URL
   const [questions, setQuestions] = useState([]);
   const [formData, setFormData] = useState({});
-
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading state
 
   const navigate = useNavigate();
 
@@ -36,11 +37,9 @@ const YogoForm = () => {
         const response = await Api.get(`/api/courses/${courseId}/questions`);
         console.log('Questions received:', response.data); // Debugging: Check if questions have `questionType`
         if (response && response.data && Array.isArray(response.data)) {
-          const formattedQuestions = response.data.map(question => ({
+          const formattedQuestions = response.data.map((question) => ({
             ...question,
-            options: question.questionType === 'yes-no'
-              ? ['Yes', 'No']
-              : question.options.map(option => option.value),
+            options: question.questionType === 'yes-no' ? ['Yes', 'No'] : question.options.map((option) => option.value),
           }));
           setQuestions(formattedQuestions);
         } else {
@@ -81,7 +80,7 @@ const YogoForm = () => {
         options: question.options,
       })),
     };
-  
+
     try {
       await Api.post(`/api/courses/${courseId}/submit-responses`, submissionData, {
         headers: {
@@ -116,34 +115,38 @@ const YogoForm = () => {
                     onChange={(e) => handleInputChange(question._id, e.target.value)}
                   />
                 )}
-                {question.questionType === 'yes-no' && question.options && question.options.map((option) => (
-                  <div key={option}>
-                    <Input
-                      type="radio"
-                      name={question._id}
-                      value={option}
-                      onChange={() => handleInputChange(question._id, option)}
-                    />
-                    <label>{option}</label>
-                  </div>
-                ))}
-                {question.questionType === 'checkbox' && question.options && question.options.map((option) => (
-                  <div key={option}>
-                    <Input
-                      type="checkbox"
-                      value={option}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        const currentValues = formData[question._id] || [];
-                        const newValues = checked
-                          ? [...currentValues, option]
-                          : currentValues.filter(value => value !== option);
-                        handleInputChange(question._id, newValues);
-                      }}
-                    />
-                    <label>{option}</label>
-                  </div>
-                ))}
+                {question.questionType === 'yes-no' &&
+                  question.options &&
+                  question.options.map((option) => (
+                    <OptionWrapper key={option}>
+                      <Input
+                        type="radio"
+                        name={question._id}
+                        value={option}
+                        onChange={() => handleInputChange(question._id, option)}
+                      />
+                      <OptionLabel>{option}</OptionLabel>
+                    </OptionWrapper>
+                  ))}
+                {question.questionType === 'checkbox' &&
+                  question.options &&
+                  question.options.map((option) => (
+                    <OptionWrapper key={option}>
+                      <Input
+                        type="checkbox"
+                        value={option}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          const currentValues = formData[question._id] || [];
+                          const newValues = checked
+                            ? [...currentValues, option]
+                            : currentValues.filter((value) => value !== option);
+                          handleInputChange(question._id, newValues);
+                        }}
+                      />
+                      <OptionLabel>{option}</OptionLabel>
+                    </OptionWrapper>
+                  ))}
               </QuestionWrapper>
             ))
           ) : (
@@ -190,14 +193,6 @@ const OptionWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 5px;
-`;
-
-const OptionsWrapper = styled.div`
-  margin-top: 10px;
-`;
-
-const OptionWrapper = styled.div`
-  margin-bottom: 10px;
 `;
 
 const OptionLabel = styled.label`
