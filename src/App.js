@@ -4,7 +4,11 @@ import './App.css';
 import Main from './pages/Main';
 import Login from './Compoents/Login'; // Assuming you have a Login component
 import SignUp from './Compoents/SignUp';
+<<<<<<< HEAD
 import Dashboard from './AdminPanel/Main/Dashboard';
+=======
+import Dashboard from './AdminPanel/Compontent/Dashboard';
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
 import User from './User/Pages/Main';
 import ForgotPassword from './Compoents/Forgotpassword';
 import Reset from './Compoents/Reset';

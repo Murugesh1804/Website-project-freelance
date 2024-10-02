@@ -3,7 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flower, Send, AlertCircle } from 'lucide-react';
+<<<<<<< HEAD
 import Api from '../../Api/Api';
+=======
+import Api from '../../Api/Api'; // Adjust path as necessary
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
 
 const YogoForm = () => {
   const { courseId } = useParams();
@@ -12,7 +16,10 @@ const YogoForm = () => {
   const [loading, setLoading] = useState(true);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,11 +27,15 @@ const YogoForm = () => {
       try {
         const studentId = JSON.parse(localStorage.getItem('user'))?.studentId;
         const submissionStatusResponse = await Api.post(`/api/courses/${courseId}/has-submitted`, { studentId });
-
+        
         if (submissionStatusResponse.data.hasSubmitted) {
           setHasSubmitted(true);
         } else {
+<<<<<<< HEAD
           await fetchQuestions();
+=======
+          fetchQuestions();
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
         }
       } catch (error) {
         console.error('Error checking submission status:', error);
@@ -37,6 +48,7 @@ const YogoForm = () => {
       try {
         const response = await Api.get(`/api/courses/${courseId}/questions`);
         if (response && response.data && Array.isArray(response.data)) {
+          setQuestions(response.data);
           const formattedQuestions = response.data.map((question) => ({
             ...question,
             options: question.questionType === 'yes-no' 
@@ -74,7 +86,11 @@ const YogoForm = () => {
       studentId,
       responses: questions.map((question) => ({
         questionId: question._id,
+<<<<<<< HEAD
         answer: formData[question._id] || "",
+=======
+        answer: formData[question._id],
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
         questionText: question.questionText,
         answerType: question.answerType,
         options: question.options,
@@ -118,7 +134,11 @@ const YogoForm = () => {
     return (
       <CenteredContainer>
         <SubmittedMessage>
+<<<<<<< HEAD
           <Flower size={48} color="#4caf50" />
+=======
+        <Flower size={48} color="#4caf50" />
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
           <h2>Peace Achieved</h2>
           <p>You have already completed this mindfulness exercise.</p>
         </SubmittedMessage>
@@ -130,13 +150,21 @@ const YogoForm = () => {
     <PageWrapper>
       <FormWrapper>
         <Header>
+<<<<<<< HEAD
           <Flower size={48} color="#4caf50" />
+=======
+        <Flower size={48} color="#4caf50" />
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
           <h2>Mindfulness Questionnaire</h2>
         </Header>
         <ProgressBar progress={(currentQuestionIndex + 1) / questions.length * 100} />
         <form onSubmit={handleSubmit}>
           <AnimatePresence mode="wait">
+<<<<<<< HEAD
             {questions.length > 0 && (
+=======
+            {questions.length > 0 ? (
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
               <motion.div
                 key={currentQuestionIndex}
                 initial={{ opacity: 0, x: 50 }}
@@ -150,7 +178,10 @@ const YogoForm = () => {
                   {questions[currentQuestionIndex].answerType === 'short-text' && (
                     <Input
                       type="text"
+<<<<<<< HEAD
                       value={formData[questions[currentQuestionIndex]._id] || ""}
+=======
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
                       onChange={(e) => handleInputChange(questions[currentQuestionIndex]._id, e.target.value)}
                       required
                       placeholder="Enter your thoughts here..."
@@ -158,6 +189,7 @@ const YogoForm = () => {
                   )}
                   {questions[currentQuestionIndex].answerType === 'yes-no' && (
                     <ButtonGroup>
+<<<<<<< HEAD
                       {questions[currentQuestionIndex].options.map((option) => (
                         <OptionButton
                           key={option}
@@ -168,37 +200,128 @@ const YogoForm = () => {
                           {option}
                         </OptionButton>
                       ))}
+=======
+                      <OptionButton
+                        type="button"
+                        selected={formData[questions[currentQuestionIndex]._id] === "Yes"}
+                        onClick={() => handleInputChange(questions[currentQuestionIndex]._id, "Yes")}
+                      >
+                        Yes
+                      </OptionButton>
+                      <OptionButton
+                        type="button"
+                        selected={formData[questions[currentQuestionIndex]._id] === "No"}
+                        onClick={() => handleInputChange(questions[currentQuestionIndex]._id, "No")}
+                      >
+                        No
+                      </OptionButton>
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
                     </ButtonGroup>
                   )}
                   {questions[currentQuestionIndex].answerType === 'multiple-choice' && (
                     <ButtonGroup>
                       {questions[currentQuestionIndex].options.map((option) => (
                         <OptionButton
+<<<<<<< HEAD
                           key={option}
                           type="button"
                           selected={formData[questions[currentQuestionIndex]._id] === option}
                           onClick={() => handleInputChange(questions[currentQuestionIndex]._id, option)}
                         >
                           {option}
+=======
+                          key={option.optionText}
+                          type="button"
+                          selected={formData[questions[currentQuestionIndex]._id] === option.optionText}
+                          onClick={() => handleInputChange(questions[currentQuestionIndex]._id, option.optionText)}
+                        >
+                          {option.optionText}
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
                         </OptionButton>
                       ))}
                     </ButtonGroup>
                   )}
                 </QuestionWrapper>
               </motion.div>
+<<<<<<< HEAD
             )}
           </AnimatePresence>
           <NavigationButtons>
             <NavButton type="button" onClick={prevQuestion} disabled={currentQuestionIndex === 0}>Previous</NavButton>
+=======
+            ) : (
+              <NoQuestionsMessage>
+                <AlertCircle size={48} color="#e74c3c" />
+                <p>No questions available for this mindfulness exercise.</p>
+              </NoQuestionsMessage>
+            )}
+          </AnimatePresence>
+          <NavigationButtons>
+            <NavButton onClick={prevQuestion} disabled={currentQuestionIndex === 0}>Previous</NavButton>
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
             {currentQuestionIndex === questions.length - 1 ? (
               <SubmitButton type="submit">
                 <Send size={18} />
                 Submit
               </SubmitButton>
             ) : (
+<<<<<<< HEAD
               <NavButton type="button" onClick={nextQuestion} disabled={currentQuestionIndex === questions.length - 1}>Next</NavButton>
             )}
           </NavigationButtons>
+=======
+              <NavButton onClick={nextQuestion} disabled={currentQuestionIndex === questions.length - 1}>Next</NavButton>
+            )}
+          </NavigationButtons>
+          {questions.length > 0 ? (
+            questions.map((question) => (
+              <QuestionWrapper key={question._id}>
+                <Label>{question.questionText}</Label>
+                {question.questionType === 'text' && (
+                  <Input
+                    type="text"
+                    onChange={(e) => handleInputChange(question._id, e.target.value)}
+                  />
+                )}
+                {question.questionType === 'yes-no' &&
+                  question.options &&
+                  question.options.map((option) => (
+                    <OptionWrapper key={option}>
+                      <Input
+                        type="radio"
+                        name={question._id}
+                        value={option}
+                        onChange={() => handleInputChange(question._id, option)}
+                      />
+                      <OptionLabel>{option}</OptionLabel>
+                    </OptionWrapper>
+                  ))}
+                {question.questionType === 'checkbox' &&
+                  question.options &&
+                  question.options.map((option) => (
+                    <OptionWrapper key={option}>
+                      <Input
+                        type="checkbox"
+                        value={option}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          const currentValues = formData[question._id] || [];
+                          const newValues = checked
+                            ? [...currentValues, option]
+                            : currentValues.filter((value) => value !== option);
+                          handleInputChange(question._id, newValues);
+                        }}
+                      />
+                      <OptionLabel>{option}</OptionLabel>
+                    </OptionWrapper>
+                  ))}
+              </QuestionWrapper>
+            ))
+          ) : (
+            <p>No questions available for this course.</p>
+          )}
+          <SubmitButton type="submit">Submit</SubmitButton>
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
         </form>
       </FormWrapper>
     </PageWrapper>
@@ -299,6 +422,65 @@ const Input = styled.input`
   font-size: 16px;
   border: 2px solid #bdc3c7;
   border-radius: 8px;
+<<<<<<< HEAD
+=======
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #3498db;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+`;
+
+const OptionButton = styled.button`
+  padding: 10px 20px;
+  font-size: 16px;
+  border: 2px solid ${props => props.selected ? '#3498db' : '#bdc3c7'};
+  border-radius: 25px;
+  background-color: ${props => props.selected ? '#3498db' : 'transparent'};
+  color: ${props => props.selected ? 'white' : '#34495e'};
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: ${props => props.selected ? '#2980b9' : '#ecf0f1'};
+  }
+`;
+
+const NavigationButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+`;
+
+const NavButton = styled.button`
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 25px;
+  background-color: #95a5a6;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #7f8c8d;
+  }
+
+  &:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+  }
+  border: 1px solid #ccc;
+  border-radius: 4px;
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
   outline: none;
   transition: border-color 0.3s ease;
 
@@ -416,6 +598,19 @@ const SubmittedMessage = styled.div`
 
   svg {
     margin-bottom: 20px;
+<<<<<<< HEAD
+=======
+  }
+`;
+
+const NoQuestionsMessage = styled.div`
+  text-align: center;
+  color: #e74c3c;
+
+  p {
+    margin-top: 20px;
+    font-size: 18px;
+>>>>>>> 153482e87a7e4906e2874a01b031e2ed3fb30c56
   }
 `;
 

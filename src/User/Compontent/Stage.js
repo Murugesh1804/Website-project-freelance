@@ -70,6 +70,7 @@ const Stage = () => {
     navigate(`/yogoform/${courseId}`);
   };
 
+
   const getStageStatus = (courseId) => {
     if (unlockedCourses.includes(courseId)) return 'unlocked';
     const index = courseDetails.findIndex(course => course.courseId === courseId);
