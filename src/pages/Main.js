@@ -11,7 +11,7 @@ import Footer from '../Compoents/Footer'
 import Pricing from '../Compoents/Pricing'
 import SignUp from '../Compoents/SignUp'
 import Login from '../Compoents/Login'
-import Dashboard from '../Compoents/Dashboard'
+import Dashboard from '../AdminPanel/Compontent/Dashboard'
 
 
 

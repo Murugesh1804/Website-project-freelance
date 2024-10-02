@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Flower, Send, AlertCircle } from 'lucide-react';
-import styled from 'styled-components';
 import Api from '../../Api/Api'; // Adjust path as necessary
 
 const YogoForm = () => {
@@ -13,8 +12,6 @@ const YogoForm = () => {
   const [loading, setLoading] = useState(true);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [loading, setLoading] = useState(true); // Loading state
   const navigate = useNavigate();
 
   useEffect(() => {

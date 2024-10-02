@@ -25,7 +25,7 @@ const Login = ({ onClose }) => {
   
       // Redirect based on the user's role
       if (user.role === 'admin') {
-        navigate('/AdminPanel'); // Navigate to admin panel if user is an admin
+        navigate('/DashBoard'); // Navigate to admin panel if user is an admin
       } else if (user.role === 'teacher') {
         navigate('/TeacherPanel'); // Navigate to teacher panel if user is a teacher
       } else if (user.role === 'student') {

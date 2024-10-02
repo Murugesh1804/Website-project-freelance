@@ -3,7 +3,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { User, DollarSign, BookOpen, AlertCircle, Activity } from 'lucide-react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import Admin from "../Assest/teacher1.jpg";
+import Admin from "../../Assest/teacher1.jpg";
+import AdminAddQuestion from './AdminAddQuestion'; // Import your existing AdminAddQuestion component
+
 
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState('User Details');
@@ -54,7 +56,7 @@ const AdminDashboard = () => {
         {[
           { icon: <User size={20} />, label: 'User Details' },
           { icon: <DollarSign size={20} />, label: 'User Transactions' },
-          { icon: <BookOpen size={20} />, label: 'Add Course' },
+          { icon: <BookOpen size={20} />, label: 'Add Questionnaires' },
           { icon: <AlertCircle size={20} />, label: 'Course Management' },
           { icon: <Activity size={20} />, label: 'User Activity' },
         ].map(({ icon, label }) => (
@@ -129,26 +131,10 @@ const AdminDashboard = () => {
             </StyledTable>
           </Section>
         )}
-        {activeSection === 'Add Course' && (
+        {activeSection === 'Add Questionnaires' && (
           <Section>
-            <SectionTitle>Add Course</SectionTitle>
-            <Form>
-              <FormGroup>
-                <label htmlFor="courseTitle">Course Title</label>
-                <input type="text" id="courseTitle" name="courseTitle" required />
-              </FormGroup>
-              <FormGroup>
-                <label htmlFor="courseDescription">Course Description</label>
-                <textarea id="courseDescription" name="courseDescription" rows="4" required></textarea>
-              </FormGroup>
-              <FormGroup>
-                <label htmlFor="coursePrice">Course Price</label>
-                <input type="number" id="coursePrice" name="coursePrice" min="0" step="0.01" required />
-              </FormGroup>
-              <SubmitButton whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} type="submit">
-                Add Course
-              </SubmitButton>
-            </Form>
+            <SectionTitle>Add Questionnaires</SectionTitle>
+            <AdminAddQuestion />
           </Section>
         )}
         {activeSection === 'Course Management' && (

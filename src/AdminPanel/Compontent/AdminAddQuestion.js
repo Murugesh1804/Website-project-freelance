@@ -385,7 +385,7 @@ const AdminAddQuestion = () => {
   };
 
   return (
-    <Container>
+    <Container style={{overflow: "scroll", maxHeight: "500px"}}>
       <Header>
         <Title>
           <FlowerIcon size={32} color="#3498db" />
